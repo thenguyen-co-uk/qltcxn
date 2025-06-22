@@ -5,7 +5,7 @@ import os
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-DB_MODE = os.environ.get('UPLOAD_FOLDER', 'offline')
+DB_MODE = os.environ.get('DB_MODE', 'offline')
 if 'online' == DB_MODE:
     URI = os.environ.get('DB_CONN')
 else:
