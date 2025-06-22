@@ -1,7 +1,7 @@
 """
 This script defines domain-objects classes to capture all logic data of the whole app.
 """
-from datetime import datetime
+from datetime import date, datetime
 from pydantic import BaseModel
 
 
@@ -14,3 +14,28 @@ class Todo(BaseModel):
     is_completed: bool = False
     id_deleted: bool = False
     creation: int = int(datetime.timestamp(datetime.now()))
+
+
+class Tenant(BaseModel):
+    """This class is used to capture the tenant information.
+    The resident information includes name, room, dob, etc.
+    """
+    id: str # identifier to different among residents
+    name: str
+    dob: date
+    gender: str
+    room: str
+    hb: bool = True # housing benefit
+    note: str # captures the changes made on the tenant for example: housing benefit or not
+
+
+class Rent(BaseModel):
+    """This class is used to hold all rents
+    The rents are all payments weekly or monthly
+    """
+    resident: Tenant
+    week_commence: date
+    rent_due: date
+    payment_date: date
+    extra: float
+    
