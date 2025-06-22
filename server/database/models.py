@@ -1,5 +1,5 @@
 """
-This script defines domain-objects classes to capture all logic data of the whole app.
+This script defines domain-objects classes to capture all logic data of the app.
 """
 from datetime import date, datetime
 from pydantic import BaseModel
@@ -27,6 +27,8 @@ class Tenant(BaseModel):
     room: str
     hb: bool = True # housing benefit
     note: str # captures the changes made on the tenant for example: housing benefit or not
+    creation: int = int(datetime.timestamp(datetime.now()))
+    modification: int = int(datetime.timestamp(datetime.now()))
 
 
 class Rent(BaseModel):
