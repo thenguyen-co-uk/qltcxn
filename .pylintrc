@@ -1,0 +1,8 @@
+[MESSAGES CONTROL]
+disable =
+    broad-except,
+    broad-exception-caught,
+    consider-using-dict-items,
+    consider-using-f-string,
+    disallowed-name,
+    too-many-nested-blocks
