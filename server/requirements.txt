@@ -1,5 +1,6 @@
-fastapi
+fastapi~=0.115.13
 jinja2
 uvicorn
-pymongo
+pymongo~=4.13.2
 pylint
+pydantic~=2.11.7

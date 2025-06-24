@@ -1,5 +1,5 @@
 """
-This script defines essential configurations for the whole app.
+This script defines essential configurations for the app.
 """
 import os
 from pymongo.mongo_client import MongoClient
