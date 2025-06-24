@@ -30,7 +30,9 @@
                 <div class="top-bar-right">
                     <ul class="menu">
                         <li><input type="search" placeholder="Search"></li>
-                        <li><button type="button" class="button">Search</button></li>
+                        <li>
+                            <button type="button" class="button">Search</button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -38,7 +40,34 @@
     </div>
     <div class="grid-x grid-padding-x">
         <div class="large-12 cell">
-            <h4>Resident ID: {{id}}</h4>
+            <h4>Resident ID: {{id}} - {{ tenant['room'] }}</h4>
+            <form>
+                <div style="display: none"><label for="_id">MongoDB ID</label>
+                    <input type="text" id="_id" value="{{ tenant['_id'] }}" readonly></div>
+                <div class="tenant-property">
+                    <div class="tenant-property-readonly">
+                        <label for="id">Tenant ID</label>
+                        <input type="text" id="id" value="{{ tenant['id'] }}" readonly></div>
+                    <div class="tenant-property-updatable">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" value="{{ tenant['name'] }}" readonly>
+                        <label for="gender">Gender</label>
+                        <input type="text" id="gender" value="{{ tenant['gender'] }}" readonly>
+                        <label for="dob">DOB</label>
+                        <input type="text" id="dob" value="{{ tenant['dob'] }}" readonly>
+                        <label for="room">Room</label>
+                        <input type="text" id="room" value="{{ tenant['room'] }}" readonly>
+                        <label for="hb">Housing Benefit</label>
+                        <input type="text" id="hb" value="{{ tenant['hb'] }}" readonly>
+                        <label for="date-creation">Date of Creation</label>
+                        <input type="text" id="date-creation" value="{{ tenant['creation'] }}" readonly>
+                        <label for="date-modification">Date of Modification</label>
+                        <input type="text" id="date-modification" value="{{ tenant['modification'] }}" readonly>
+                    </div>
+                </div>
+                <label for="btn-action"></label><input type="button" id="btn-action" class="button"
+                                                       value="Update">
+            </form>
         </div>
     </div>
 </div>
@@ -46,5 +75,27 @@
 <script src="{{ url_for('static', path='/js/vendor/what-input.js') }}"></script>
 <script src="{{ url_for('static', path='/js/vendor/foundation.js') }}"></script>
 <script src="{{ url_for('static', path='/js/app.js') }}"></script>
+<script>
+    function enableEdit() {
+        console.log("enabling edit...");
+        $(".tenant-property-updatable input").prop("readonly", false);
+    }
+
+    function saveChanges() {
+        console.log("updating...");
+        $(".tenant-property-updatable input").prop("readonly", true);
+    }
+
+    $('#btn-action').on('click', function () {
+        let val = $(this).val();
+        if (val === "Save") {
+            saveChanges();
+        } else if (val === "Update") {
+            enableEdit();
+        }
+        val = val === "Update" ? "Save" : "Update";
+        $(this).val(val);
+    });
+</script>
 </body>
 </html>

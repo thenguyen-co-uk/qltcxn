@@ -40,7 +40,16 @@
     <div class="grid-x grid-padding-x">
         <div class="large-12 cell">
             {% for tenant in data %}
-            <h2><a href="{{ url_for('read_tenant', id=tenant['id']) }}">Resident ID: {{ tenant['id'] }}</a></h2>
+            <h4><a href="{{ url_for('read_tenant', id=tenant['id']) }}">Resident ID: {{ tenant['id'] }}</a></h4>
+            <p>
+                {{ tenant['name'] }}<br/>
+                {{ tenant['gender'] }}<br/>
+                {{ tenant['dob'] }}<br/>
+                {{ tenant['room'] }}<br/>
+                {{ tenant['hb'] }}<br/>
+                {{ tenant['creation'] }}<br/>
+                {{ tenant['modification'] }}
+            </p>
             {% endfor %}
         </div>
     </div>

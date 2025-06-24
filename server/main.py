@@ -69,8 +69,9 @@ async def add_tenant(new_tenant: Tenant):
 @router.get("/tenant/{id}", response_class=HTMLResponse)
 async def read_tenant(request: Request, id: str):
     """Route: display a tenant"""
+    tenant = col_tenants.find_one({"id": id})
     return templates.TemplateResponse(
-        "tenant.html", {"request": request, "id": id}
+        "tenant.html", {"request": request, "id": id, "tenant": tenant}
     )
 
 
