@@ -22,7 +22,7 @@ def get_tenant(tenant):
         "gender": tenant["gender"],
         "room": tenant["room"],
         "hb": tenant["hb"],
-        "note": tenant["note"]
+        "notes": tenant["notes"]
     }
 
 

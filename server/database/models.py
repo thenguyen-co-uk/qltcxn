@@ -26,7 +26,7 @@ class Tenant(BaseModel):
     gender: str
     room: str
     hb: bool = True # housing benefit
-    note: str # captures the changes made on the tenant for example: housing benefit or not
+    notes: str # the changes made on the tenant for example: housing benefit
     creation: int = int(datetime.timestamp(datetime.now()))
     modification: int = int(datetime.timestamp(datetime.now()))
 
