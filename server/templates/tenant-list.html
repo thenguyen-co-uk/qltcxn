@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Tenants List | ALH</title>
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon/favicon.ico">
+    <link href="{{ url_for('static', path='/css/styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/foundation.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/app.css') }}" rel="stylesheet">
+</head>
+<body>
+<div class="grid-container">
+    <div class="grid-x grid-padding-x">
+        <div class="small-12 medium-12 large-12 cell">
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <ul class="dropdown menu" data-dropdown-menu>
+                        <li><a href="/">Home</a></li>
+                        <li>
+                            <a href="/tenants/show">Tenants</a>
+                            <!--<ul class="menu vertical">
+                                <li><a href="#">One</a></li>
+                                <li><a href="#">Two</a></li>
+                                <li><a href="#">Three</a></li>
+                            </ul>-->
+                        </li>
+                        <li><a href="#">Rents</a></li>
+                        <li><a href="#">Categories</a></li>
+                    </ul>
+                </div>
+                <div class="top-bar-right">
+                    <ul class="menu">
+                        <li><input type="search" placeholder="Search"></li>
+                        <li><button type="button" class="button">Search</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x">
+        <div class="large-12 cell">
+            {% for tenant in data %}
+            <h2><a href="{{ url_for('read_tenant', id=tenant['id']) }}">Resident ID: {{ tenant['id'] }}</a></h2>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', path='/js/vendor/jquery.js') }}"></script>
+<script src="{{ url_for('static', path='/js/vendor/what-input.js') }}"></script>
+<script src="{{ url_for('static', path='/js/vendor/foundation.js') }}"></script>
+<script src="{{ url_for('static', path='/js/app.js') }}"></script>
+</body>
+</html>
