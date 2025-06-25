@@ -10,7 +10,7 @@
     {% include('_menubar.html') %}
     <div class="grid-x grid-padding-x">
         <div class="large-12 cell">
-            {% for tenant in data %}
+            {#{% for tenant in data %}
             <h4><a href="{{ url_for('read_tenant', id=tenant['id']) }}">Resident ID: {{ tenant['id'] }}</a></h4>
             <p>
                 {{ tenant['name'] }}<br/>
@@ -22,11 +22,50 @@
                 {{ tenant['modification'] }}
                 {{ tenant['notes'] }}
             </p>
-            {% endfor %}
+            {% endfor %}#}
+
+            <table id="myTable" class="display">
+                <thead>
+                <tr>
+                    {#<th>Object ID</th>#}
+                    <th>Tenant ID</th>
+                    <th>Name</th>
+                    <th>Gener</th>
+                    <th>DOB</th>
+                    <th>Room</th>
+                    <th>HB</th>
+                    <th>Created Date</th>
+                    <th>Modified Date</th>
+                    <th>Notes</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for tenant in data %}
+                    <tr>
+                        <td><a href="{{ url_for('read_tenant', id=tenant.id) }}">{{ tenant.id }}</a></td>
+                        <td>{{ tenant.name }}</td>
+                        <td>{{ tenant.gender }}</td>
+                        <td>{{ tenant.dob }}</td>
+                        <td>{{ tenant.room }}</td>
+                        <td>{{ tenant.hb }}</td>
+                        <td>{{ tenant.creation }}</td>
+                        <td>{{ tenant.modification }}</td>
+                        <td>{{ tenant.notes }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
         </div>
     </div>
 </div>
 
 {% include '_foot.html' %}
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+</script>
 </body>
 </html>
