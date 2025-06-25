@@ -9,13 +9,40 @@
     {% include('_menubar.html') %}
     <div class="grid-x grid-padding-x">
         <div class="large-12 cell">
-            {% for rent in data %}
-            <p>{{ rent }}</p>
-            {% endfor %}
+            <table id="myTable" class="display">
+                <thead>
+                <tr>
+                    <th>Tenant/Room</th>
+                    <th>Week Commence</th>
+                    <th>Rent Due</th>
+                    <th>Payment Date</th>
+                    <th>Standing Order</th>
+                    <th>Extra</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for rent in data %}
+                    <tr>
+                        <td>{{ rent.tenant_id }}</td>
+                        <td>{{ rent.week_commence }}</td>
+                        <td>{{ rent.rent_due }}</td>
+                        <td>{{ rent.payment_date }}</td>
+                        <td>{{ rent.standing_order }}</td>
+                        <td>{{ rent.extra }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 {% include '_foot.html' %}
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+</script>
 </body>
 </html>
