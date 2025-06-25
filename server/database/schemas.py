@@ -20,7 +20,7 @@ def get_tenant(tenant: Tenant):
         "_id": str(tenant["_id"]),
         "id": tenant["id"],
         "name": tenant["name"],
-        "dob": tenant["dob"],
+        "dob": tenant["dob"].strftime("%d/%m/%Y"),
         "gender": tenant["gender"],
         "room": tenant["room"],
         "hb": tenant["hb"],
@@ -33,9 +33,9 @@ def get_rent(rent: Rent):
     return {
         "_id": str(rent["_id"]),
         "tenant_id": rent["tenant_id"],
-        "week_commence": rent["week_commence"],
-        "rent_due": rent["rent_due"],
-        "payment_date": rent["payment_date"],
+        "week_commence": rent["week_commence"].strftime("%d/%m/%Y"),
+        "rent_due": rent["rent_due"].strftime("%d/%m/%Y"),
+        "payment_date": rent["payment_date"].strftime("%d/%m/%Y"),
         "standing_order": rent["standing_order"],
         "extra": rent["extra"]
     }
