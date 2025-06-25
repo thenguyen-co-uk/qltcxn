@@ -1,0 +1,29 @@
+<form>
+    <div style="display: none"><label for="_id">MongoDB ID</label>
+        <input type="text" id="_id" value="{{ rent['_id'] }}" readonly></div>
+    <div class="rent-property">
+        <div class="rent-property-readonly">
+            <label for="tenant-id">Tenant ID</label>
+            <input type="text" id="tenant-id" value="{{ rent['tenant_id'] }}" readonly></div>
+        <div class="rent-property-updatable">
+            <label for="week-commence">Week Commence</label>
+            <input type="text" id="week-commence" value="{{ rent['week_commence'] }}" readonly>
+            <label for="rent-due">Rent Due</label>
+            <input type="text" id="rent-due" value="{{ rent['rent_due'] }}" readonly>
+            <label for="payment-date">Payment Date</label>
+            <input type="text" id="payment-date" value="{{ rent['payment_date'] }}" readonly>
+            <label for="standing-order">Standing Order</label>
+            <input type="text" id="standing-order" value="{{ rent['standing_order'] }}" readonly>
+            <label for="extra">Extra</label>
+            <input type="text" id="extra" value="{{ rent['extra'] }}" readonly>
+            {#<label for="date-creation">Date of Creation</label>
+            <input type="text" id="date-creation" value="{{ rent['creation'] }}" readonly>
+            <label for="date-modification">Date of Modification</label>
+            <input type="text" id="date-modification" value="{{ rent['modification'] }}" readonly>#}
+            <label for="notes">Notes</label>
+            <textarea id="notes" readonly>Create a new field for notes</textarea>
+        </div>
+    </div>
+    <label for="btn-action"></label>
+    <input type="button" id="btn-action" class="button" value="Update">
+</form>

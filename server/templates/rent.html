@@ -9,7 +9,12 @@
     {% include('_menubar.html') %}
     <div class="grid-x grid-padding-x">
         <div class="large-12 cell">
+            {% if id %}
             <h2>Rent {{ id }}</h2>
+            {% else %}
+            <h2>Add a new rent</h2>
+            {% endif %}
+            {% include "_rent-form.html" %}
             {#<table id="myTable" class="display">
                 <thead>
                 <tr>

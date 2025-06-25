@@ -145,6 +145,22 @@ async def add_rent(new_rent: Rent):
         return HTTPException(status_code=500,
                              detail=f"Some errors happened {e}")
 
+
+@router.get("/add/rent", response_class=HTMLResponse)
+async def render_add_rent(request: Request):
+    """Route: render the form to add a rent"""
+    rent = Rent(tenant_id="", week_commence="2025-06-16 00:00:00", rent_due="2025-06-16 00:00:00",
+                payment_date="2025-06-16 00:00:00", standing_order=0.0, extra=0.0)
+    return templates.TemplateResponse("rent-add.html",
+                                      {"request": request, "rent": rent})
+
+
+@router.get("/add/tenant", response_class=HTMLResponse)
+async def render_add_tenant(request: Request):
+    """Route: render the form to add a tenant"""
+    return templates.TemplateResponse("tenant-add.html",
+                                      {"request": request, "name": "Tung"})
+
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse("index.html",
