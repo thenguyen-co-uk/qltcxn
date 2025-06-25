@@ -23,7 +23,7 @@
                 <tbody>
                 {% for rent in data %}
                     <tr>
-                        <td>{{ rent.tenant_id }}</td>
+                        <td><a href="{{ url_for('read_tenant', id=rent['tenant_id']) }}">{{ rent.tenant_id }}</a></td>
                         <td>{{ rent.week_commence }}</td>
                         <td>{{ rent.rent_due }}</td>
                         <td>{{ rent.payment_date }}</td>
