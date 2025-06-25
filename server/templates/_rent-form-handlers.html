@@ -20,9 +20,9 @@
         const URL = "/rent/update/" + $('#_id').val();
         const updated = {
             'tenant_id': $('#tenant-id').val(),
-            'week_commence': $('#week-commence').val(),
-            'rent_due': $('#rent-due').val(),
-            'payment_date': $('#payment-date').val(),
+            'week_commence': convertToDateISO8601($('#week-commence').val()),
+            'rent_due': convertToDateISO8601($('#rent-due').val()),
+            'payment_date': convertToDateISO8601($('#payment-date').val()),
             'standing_order': $('#standing-order').val(),
             'extra': $('#extra').val(),
             'notes': $('#notes').val()
