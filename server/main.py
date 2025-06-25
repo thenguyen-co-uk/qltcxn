@@ -75,6 +75,7 @@ async def add_tenant(new_tenant: Tenant):
 async def read_rent(request: Request, id: str):
     """Route: read a rent from the database"""
     rent = col_rents.find_one({"_id": ObjectId(id)})
+    rent = get_rent(rent)
     return templates.TemplateResponse(
         "rent.html", {"request": request, "id": id, "rent": rent}
     )
@@ -84,7 +85,8 @@ async def read_rent(request: Request, id: str):
 async def read_tenant(request: Request, id: str):
     """Route: display a tenant"""
     tenant = col_tenants.find_one({"id": id})
-    tenant["dob"] = tenant["dob"].strftime("%Y-%m-%d")
+    # tenant["dob"] = tenant["dob"].strftime("%Y-%m-%d")
+    tenant = get_tenant(tenant)
     return templates.TemplateResponse(
         "tenant.html", {"request": request, "id": id, "tenant": tenant}
     )
