@@ -71,6 +71,15 @@ async def add_tenant(new_tenant: Tenant):
                              detail=f"Some errors happened {e}")
 
 
+@router.get("/rent/{id}", response_class=HTMLResponse)
+async def read_rent(request: Request, id: str):
+    """Route: read a rent from the database"""
+    rent = col_rents.find_one({"_id": ObjectId(id)})
+    return templates.TemplateResponse(
+        "rent.html", {"request": request, "id": id, "rent": rent}
+    )
+
+
 @router.get("/tenant/{id}", response_class=HTMLResponse)
 async def read_tenant(request: Request, id: str):
     """Route: display a tenant"""
