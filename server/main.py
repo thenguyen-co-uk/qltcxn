@@ -119,7 +119,7 @@ async def update_rent(rent_object_id: str, rent: Rent):
     rent.rent_due = datetime(dt.year, dt.month, dt.day, 0, 0, 0)
     dt = rent.payment_date
     rent.payment_date = datetime(dt.year, dt.month, dt.day, 0, 0, 0)
-    result = col_tenants.update_one(
+    result = col_rents.update_one(
         {"_id": ObjectId(rent_object_id)},
         {"$set": dict(rent)}, upsert=False
     )
