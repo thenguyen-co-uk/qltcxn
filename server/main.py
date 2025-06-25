@@ -2,7 +2,7 @@
 The main app is defined in this file.
 """
 import json
-from datetime import datetime
+from datetime import datetime, date
 from pathlib import Path
 
 from bson import ObjectId
@@ -171,10 +171,18 @@ async def add_rent(new_rent: Rent):
 @router.get("/add/rent", response_class=HTMLResponse)
 async def render_add_rent(request: Request):
     """Route: render the form to add a rent"""
-    rent = Rent(tenant_id="", week_commence="2025-06-16 00:00:00", rent_due="2025-06-16 00:00:00",
-                payment_date="2025-06-16 00:00:00", standing_order=0.0, extra=0.0)
+    year = datetime.now().year
+    month = datetime.now().month
+    day = datetime.now().day
+    rent = Rent(tenant_id="",
+                week_commence=date(year, month, day),
+                rent_due=date(year, month, day),
+                payment_date=date(year, month, day),
+                standing_order=0.0,
+                extra=0.0, notes="")
     return templates.TemplateResponse("rent-add.html",
-                                      {"request": request, "rent": rent})
+                                      {"request": request, "rent": rent,
+                                       "action": "add"})
 
 
 @router.get("/add/tenant", response_class=HTMLResponse)

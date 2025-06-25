@@ -1,4 +1,5 @@
 <script defer>
+    const btnAction = $('#btn-action');
     $(document).ready(function () {
         $('#week-commence').fdatepicker({
             format: 'dd/mm/yyyy'
@@ -9,11 +10,48 @@
         $('#payment-date').fdatepicker({
             format: 'dd/mm/yyyy'
         });
+        console.log("{{ action }}");
+        if ("{{ action }}" === "add")  {
+            toggleLockAndUnlockForm(false);
+            btnAction.val("Add");
+        }
     });
 
     function toggleLockAndUnlockForm(flag = false) {
         $(".rent-property-updatable input").prop("readonly", flag);
         $(".rent-property-updatable textarea").prop("readonly", flag);
+    }
+
+    function addNewRent() {
+        console.log("the implementation is in progress");
+        const URL = "/rent/add/";
+        const newRent = {
+            'tenant_id': $('#tenant-id').val(),
+            'week_commence': convertToDateISO8601($('#week-commence').val()),
+            'rent_due': convertToDateISO8601($('#rent-due').val()),
+            'payment_date': convertToDateISO8601($('#payment-date').val()),
+            'standing_order': $('#standing-order').val(),
+            'extra': $('#extra').val(),
+            'notes': $('#notes').val()
+        };
+        console.log(newRent);
+        fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(newRent)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed!!!');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
     }
 
     function saveChanges() {
@@ -49,12 +87,15 @@
         toggleLockAndUnlockForm(true);
     }
 
-    $('#btn-action').on('click', function () {
+    btnAction.on('click', function () {
         let val = $(this).val();
         if (val === "Save") {
             saveChanges();
         } else if (val === "Update") {
             toggleLockAndUnlockForm(false);
+        } else if (val === "Add") {
+            addNewRent();
+            return;
         }
         val = val === "Update" ? "Save" : "Update";
         $(this).val(val);
