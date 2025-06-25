@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rents List | ALH</title>
+    {% include('_head.html') %}
+</head>
+<body>
+<div class="grid-container">
+    {% include('_menubar.html') %}
+    <div class="grid-x grid-padding-x">
+        <div class="large-12 cell">
+            {% for rent in data %}
+            <p>{{ rent }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include '_foot.html' %}
+</body>
+</html>

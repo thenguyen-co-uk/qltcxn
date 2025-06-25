@@ -11,13 +11,14 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from config import db
-from database.schemas import get_all_records, get_task, get_tenant
-from database.models import Tenant, Todo
+from database.schemas import get_all_records, get_rent, get_task, get_tenant
+from database.models import Rent, Tenant, Todo
 
 app = FastAPI()
 router = APIRouter()
 col_tasks = db["tasks"]
 col_tenants = db["tenant"]
+col_rents = db["rent"]
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
@@ -98,10 +99,42 @@ async def update_tenant(tenant_object_id: str, tenant: Tenant):
         "matched_count": result.matched_count
     })
 
-    """ return templates.TemplateResponse(
-        "tenant.html", {"request": request, "id": id, "tenant": tenant}
-    ) """
 
+@router.get("/rents")
+async def get_all_rents():
+    """Route: gets all rents"""
+    data = col_rents.find()
+    return get_all_records(get_rent, data)
+
+
+@router.get("/rent/{id}")
+async def retrieve_rent(id: str):
+    """Route: retrieve a rent"""
+    return {"message": f"rent {id}"}
+
+
+@router.get("/rents/list", response_class=HTMLResponse)
+async def show_all_rents(request: Request):
+    """Route: show all rents"""
+    data = get_all_records(get_rent, col_rents.find())
+    return templates.TemplateResponse("rent-list.html",
+                                      {"request": request, "data": data})
+
+
+@router.post("/rent/add")
+async def add_rent(new_rent: Rent):
+    """Route: add a rent"""
+    try:
+        d = dict(new_rent)
+        date_format = '%Y-%m-%d'
+        d["week_commence"] = datetime.strptime(str(d["week_commence"]), date_format)
+        d["rent_due"] = datetime.strptime(str(d["rent_due"]), date_format)
+        d["payment_date"] = datetime.strptime(str(d["payment_date"]), date_format)
+        resp = col_rents.insert_one(d)
+        return {"status_code": 200, "id": str(resp.inserted_id)}
+    except Exception as e:
+        return HTTPException(status_code=500,
+                             detail=f"Some errors happened {e}")
 
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):

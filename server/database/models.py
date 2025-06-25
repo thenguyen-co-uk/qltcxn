@@ -35,9 +35,10 @@ class Rent(BaseModel):
     """This class is used to hold all rents
     The rents are all payments weekly or monthly
     """
-    resident: Tenant
+    tenant_id: str
     week_commence: date
     rent_due: date
     payment_date: date
+    standing_order: float
     extra: float
     

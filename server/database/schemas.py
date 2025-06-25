@@ -1,6 +1,8 @@
 """
 This script defines all operations.
 """
+from database.models import Rent, Tenant
+
 
 def get_task(todo):
     """ Returns the task detail of a given task """
@@ -12,7 +14,7 @@ def get_task(todo):
     }
 
 
-def get_tenant(tenant):
+def get_tenant(tenant: Tenant):
     """ Returns the tenant information of a given tenant """
     return {
         "_id": str(tenant["_id"]),
@@ -23,6 +25,19 @@ def get_tenant(tenant):
         "room": tenant["room"],
         "hb": tenant["hb"],
         "notes": tenant["notes"]
+    }
+
+
+def get_rent(rent: Rent):
+    """ Returns the rent information of a given tenant """
+    return {
+        "_id": str(rent["_id"]),
+        "tenant_id": rent["tenant_id"],
+        "week_commence": rent["week_commence"],
+        "rent_due": rent["rent_due"],
+        "payment_date": rent["payment_date"],
+        "standing_order": rent["standing_order"],
+        "extra": rent["extra"]
     }
 
 
