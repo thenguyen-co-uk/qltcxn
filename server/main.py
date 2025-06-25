@@ -49,8 +49,8 @@ async def get_all_tenants():
     return get_all_records(get_tenant, data)
 
 
-@router.get("/tenants/show", response_class=HTMLResponse)
-async def show_all_tenants(request: Request):
+@router.get("/tenants/list", response_class=HTMLResponse)
+async def list_all_tenants(request: Request):
     """Route: show all tenants"""
     data = get_all_records(get_tenant, col_tenants.find())
     return templates.TemplateResponse("tenant-list.html",
@@ -123,7 +123,7 @@ async def retrieve_rent(id: str):
 
 
 @router.get("/rents/list", response_class=HTMLResponse)
-async def show_all_rents(request: Request):
+async def list_all_rents(request: Request):
     """Route: show all rents"""
     data = get_all_records(get_rent, col_rents.find())
     return templates.TemplateResponse("rent-list.html",
