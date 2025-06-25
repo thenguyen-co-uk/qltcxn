@@ -44,11 +44,12 @@
 </div>
 {% include '_foot.html' %}
 <script>
-        $(document).ready(function () {
+    $(document).ready(function () {
         $('#dob').fdatepicker({
             format: 'dd/mm/yyyy'
         });
     });
+
     function enableEdit() {
         console.log("enabling edit...");
         $(".tenant-property-updatable input").prop("readonly", false);

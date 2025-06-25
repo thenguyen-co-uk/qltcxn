@@ -110,6 +110,26 @@ async def update_tenant(tenant_object_id: str, tenant: Tenant):
         "matched_count": result.matched_count
     })
 
+@router.put("/rent/update/{rent_object_id}")
+async def update_rent(rent_object_id: str, rent: Rent):
+    """Route: update a given rent"""
+    dt = rent.week_commence
+    rent.week_commence = datetime(dt.year, dt.month, dt.day, 0, 0, 0)
+    dt = rent.rent_due
+    rent.rent_due = datetime(dt.year, dt.month, dt.day, 0, 0, 0)
+    dt = rent.payment_date
+    rent.payment_date = datetime(dt.year, dt.month, dt.day, 0, 0, 0)
+    result = col_tenants.update_one(
+        {"_id": ObjectId(rent_object_id)},
+        {"$set": dict(rent)}, upsert=False
+    )
+
+    return json.dumps({
+        "status_code": 200,
+        "acknowledged": result.acknowledged,
+        "matched_count": result.matched_count
+    })
+
 
 @router.get("/rents")
 async def get_all_rents():
