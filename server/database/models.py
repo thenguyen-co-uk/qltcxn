@@ -41,4 +41,5 @@ class Rent(BaseModel):
     payment_date: date
     standing_order: float
     extra: float
+    notes: str
     

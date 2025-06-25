@@ -30,7 +30,7 @@ def get_tenant(tenant: Tenant):
 
 def get_rent(rent: Rent):
     """ Returns the rent information of a given tenant """
-    return {
+    data =  {
         "_id": str(rent["_id"]),
         "tenant_id": rent["tenant_id"],
         "week_commence": rent["week_commence"].strftime("%d/%m/%Y"),
@@ -39,6 +39,9 @@ def get_rent(rent: Rent):
         "standing_order": rent["standing_order"],
         "extra": rent["extra"]
     }
+    if "notes" in rent:
+        data["notes"] = rent["notes"]
+    return data
 
 
 def get_all_records(get_record_function, all_records):
