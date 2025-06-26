@@ -1,6 +1,8 @@
 """
 This script defines all operations.
 """
+from datetime import datetime
+
 from database.models import Rent, Tenant
 
 
@@ -24,6 +26,8 @@ def get_tenant(tenant: Tenant):
         "gender": tenant["gender"],
         "room": tenant["room"],
         "hb": tenant["hb"],
+        "creation": datetime.fromtimestamp(tenant["creation"]),
+        "modification": datetime.fromtimestamp(tenant["modification"]),
         "notes": tenant["notes"]
     }
 

@@ -48,6 +48,30 @@
         $('#dob').fdatepicker({
             format: 'dd/mm/yyyy'
         });
+        // $('#date-creation').fdatepicker({
+        //     format: 'dd/mm/yyyy hh:ii',
+        //     pickTime: true
+        // });
+        // $('#date-modification').fdatepicker({
+        //     format: 'dd/mm/yyyy hh:ii',
+        //     pickTime: true
+        // });
+        $('#date-creation').datepicker({
+            dateFormat: 'yy-mm-dd',
+            onSelect: function(datetext) {
+                datetext = datetext + convertToISODateTime();
+                $('#datepicker').val(datetext);
+                $(this).val(datetext);
+            }
+        });
+        $('#date-modification').datepicker({
+            dateFormat: 'yy-mm-dd',
+            onSelect: function(datetext) {
+                datetext = datetext + convertToISODateTime();
+                $('#datepicker').val(datetext);
+                $(this).val(datetext);
+            }
+        });
     });
 
     function enableEdit() {
@@ -66,8 +90,8 @@
             'dob': convertToDateISO8601($('#dob').val()),
             'hb': $('#hb').val(),
             'room': $('#room').val(),
-            'creation': $('#date-creation').val(),
-            'modification': $('#date-modification').val(),
+            'creation': getTimestamp($('#date-creation').val()),
+            'modification': getTimestamp($('#date-modification').val()),
             'notes': $('#notes').val(),
         };
         console.log(updated);
