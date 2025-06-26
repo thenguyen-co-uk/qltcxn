@@ -57,6 +57,17 @@ async def list_all_tenants(request: Request):
                                       {"request": request, "data": data})
 
 
+@router.delete("/tenant/delete/{_id}")
+async def delete_tenant(request: Request, _id: str):
+    """Route: delete a tenant"""
+    result = col_tenants.find_one_and_delete({"_id": ObjectId(_id)})
+    return {
+        "status_code": 200,
+        "_id": _id,
+        "message": f"tenant {_id} deleted"
+    }
+
+
 @router.post("/tenant/add")
 async def add_tenant(new_tenant: Tenant):
     """Route: add a tenant"""
