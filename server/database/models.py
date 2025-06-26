@@ -6,7 +6,8 @@ from pydantic import BaseModel
 
 
 class Todo(BaseModel):
-    """This class is used to create Todo instances
+    """
+    This class is used to create Task instances
     It has five attributes including title, description, is_completed, is_deleted and creation.
     """
     title: str
@@ -17,7 +18,8 @@ class Todo(BaseModel):
 
 
 class Tenant(BaseModel):
-    """This class is used to capture the tenant information.
+    """
+    This class is used to capture the tenant information.
     The resident information includes name, room, dob, etc.
     """
     id: str # identifier to different among residents
@@ -32,8 +34,10 @@ class Tenant(BaseModel):
 
 
 class Rent(BaseModel):
-    """This class is used to hold all rents
-    The rents are all payments weekly or monthly
+    """
+    This class is used to hold all rents
+    The rents are all weekly or monthly payments including rent due,
+    housing services, utilities and meals.
     """
     tenant_id: str
     week_commence: date
