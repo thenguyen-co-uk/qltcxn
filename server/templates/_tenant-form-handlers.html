@@ -1,0 +1,128 @@
+<script>
+    const btnAction = $('#btn-action');
+    $(document).ready(function () {
+        $('#dob').fdatepicker({
+            format: 'dd/mm/yyyy'
+        });
+        // $('#date-creation').fdatepicker({
+        //     format: 'dd/mm/yyyy hh:ii',
+        //     pickTime: true
+        // });
+        // $('#date-modification').fdatepicker({
+        //     format: 'dd/mm/yyyy hh:ii',
+        //     pickTime: true
+        // });
+        $('#date-creation').datepicker({
+            dateFormat: 'yy-mm-dd',
+            onSelect: function(datetext) {
+                datetext = datetext + convertToISODateTime();
+                $('#datepicker').val(datetext);
+                $(this).val(datetext);
+            }
+        });
+        $('#date-modification').datepicker({
+            dateFormat: 'yy-mm-dd',
+            onSelect: function(datetext) {
+                datetext = datetext + convertToISODateTime();
+                $('#datepicker').val(datetext);
+                $(this).val(datetext);
+            }
+        });
+        if ("{{ action }}" === "add")  {
+            toggleLockAndUnlockForm(false);
+            $(".tenant-property-readonly input").prop("readonly", false);
+            btnAction.val("Add");
+        }
+    });
+
+    function toggleLockAndUnlockForm(flag = false) {
+        $(".tenant-property-updatable input").prop("readonly", flag);
+        $(".tenant-property-updatable textarea").prop("readonly", flag);
+        //$(".tenant-property-updatable select").prop("disabled", flag);
+    }
+
+    function saveChanges() {
+        console.log("updating...");
+        const URL = "/tenant/update/" + $('#_id').val();
+        const updated = {
+            'id': $('#id').val(),
+            'name': $('#name').val(),
+            'gender': $('#gender').val(),
+            'dob': convertToDateISO8601($('#dob').val()),
+            'hb': $('#hb').val(),
+            'room': $('#room').val(),
+            'creation': getTimestamp($('#date-creation').val()),
+            'modification': getTimestamp($('#date-modification').val()),
+            'notes': $('#notes').val(),
+        };
+        console.log(updated);
+        fetch(URL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(updated)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed!!!');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+
+        toggleLockAndUnlockForm(true);
+    }
+
+    function addNewTenant() {
+        console.log("adding a new tenant...");
+        const URL = "/tenant/add";
+        const newTenant = {
+            'id': $('#id').val(),
+            'name': $('#name').val(),
+            'gender': $('#gender').val(),
+            'dob': convertToDateISO8601($('#dob').val()),
+            'hb': $('#hb').val(),
+            'room': $('#room').val(),
+            'creation': getTimestamp($('#date-creation').val()),
+            'modification': getTimestamp($('#date-modification').val()),
+            'notes': $('#notes').val(),
+        };
+        console.log(newTenant);
+        fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(newTenant)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed!!!');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            toastr.success(data["status_code"] + ": " + data["id"]);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+    }
+
+    btnAction.on('click', function () {
+        let val = $(this).val();
+        if (val === "Save") {
+            saveChanges();
+        } else if (val === "Update") {
+            toggleLockAndUnlockForm(false);
+        } else if (val === "Add") {
+            addNewTenant();
+            return;
+        }
+        val = val === "Update" ? "Save" : "Update";
+        $(this).val(val);
+    });
+</script>

@@ -57,7 +57,7 @@ async def list_all_tenants(request: Request):
                                       {"request": request, "data": data})
 
 
-@router.post("/add-tenant")
+@router.post("/tenant/add")
 async def add_tenant(new_tenant: Tenant):
     """Route: add a tenant"""
     try:
@@ -193,8 +193,12 @@ async def render_add_rent(request: Request):
 @router.get("/add/tenant", response_class=HTMLResponse)
 async def render_add_tenant(request: Request):
     """Route: render the form to add a tenant"""
-    return templates.TemplateResponse("tenant-add.html",
-                                      {"request": request, "name": "Tung"})
+    dtnow = datetime.now()
+    dob = dtnow.date()
+    tenant = Tenant(id="", name="", dob=dob, gender="male", room="", hb=True,
+                    notes="", creation=0, modification=0)
+    ctx_dict = {"request": request, "name": "Tung", "tenant": tenant, "action": "add"}
+    return templates.TemplateResponse("tenant-add.html", ctx_dict)
 
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
