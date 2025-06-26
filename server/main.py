@@ -180,6 +180,9 @@ async def render_add_rent(request: Request):
                 payment_date=date(year, month, day),
                 standing_order=0.0,
                 extra=0.0, notes="")
+    rent.week_commence = rent.week_commence.strftime("%d/%m/%Y")
+    rent.rent_due = rent.rent_due.strftime("%d/%m/%Y")
+    rent.payment_date = rent.payment_date.strftime("%d/%m/%Y")
     return templates.TemplateResponse("rent-add.html",
                                       {"request": request, "rent": rent,
                                        "action": "add"})
