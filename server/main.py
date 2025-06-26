@@ -76,8 +76,10 @@ async def read_rent(request: Request, id: str):
     """Route: read a rent from the database"""
     rent = col_rents.find_one({"_id": ObjectId(id)})
     rent = get_rent(rent)
+    tenants = get_all_records(get_tenant, col_tenants.find())
     return templates.TemplateResponse(
-        "rent.html", {"request": request, "id": id, "rent": rent}
+        "rent.html",
+        {"request": request, "id": id, "rent": rent, "tenants": tenants}
     )
 
 
@@ -183,9 +185,9 @@ async def render_add_rent(request: Request):
     rent.week_commence = rent.week_commence.strftime("%d/%m/%Y")
     rent.rent_due = rent.rent_due.strftime("%d/%m/%Y")
     rent.payment_date = rent.payment_date.strftime("%d/%m/%Y")
+    tenants = get_all_records(get_tenant, col_tenants.find())
     return templates.TemplateResponse("rent-add.html",
-                                      {"request": request, "rent": rent,
-                                       "action": "add"})
+        {"request": request, "rent": rent, "action": "add", "tenants": tenants})
 
 
 @router.get("/add/tenant", response_class=HTMLResponse)

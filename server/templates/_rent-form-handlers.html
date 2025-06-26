@@ -1,6 +1,9 @@
 <script defer>
     const btnAction = $('#btn-action');
     $(document).ready(function () {
+        {% for tenant in tenants %}
+        $('#tenant-id').append(new Option("{{ tenant['name'] }}", "{{ tenant['id'] }}"));
+        {% endfor %}
         $('#week-commence').fdatepicker({
             format: 'dd/mm/yyyy'
         });
@@ -20,6 +23,7 @@
     function toggleLockAndUnlockForm(flag = false) {
         $(".rent-property-updatable input").prop("readonly", flag);
         $(".rent-property-updatable textarea").prop("readonly", flag);
+        $(".rent-property-updatable select").prop("disabled", flag);
     }
 
     function addNewRent() {

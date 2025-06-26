@@ -4,7 +4,9 @@
     <div class="rent-property">
         <div class="rent-property-updatable">
             <label for="tenant-id">Tenant ID</label>
-            <input type="text" id="tenant-id" value="{{ rent['tenant_id'] }}" readonly></div>
+            <select name="cars" id="tenant-id" disabled>
+            </select>
+        </div>
         <div class="rent-property-updatable">
             <label for="week-commence">Week Commence</label>
             <input type="text" id="week-commence" value="{{ rent['week_commence'] }}" readonly>
