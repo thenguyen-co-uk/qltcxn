@@ -33,12 +33,12 @@ def get_tenant(tenant: Tenant):
 
 
 def get_rent(rent: Rent):
-    """ Returns the rent information of a given tenant """
+    """ Returns the dict of a given rent information """
     data =  {
         "_id": str(rent["_id"]),
         "tenant_id": rent["tenant_id"],
         "week_commence": rent["week_commence"].strftime("%d/%m/%Y"),
-        "rent_due": rent["rent_due"].strftime("%d/%m/%Y"),
+        "rent_due": rent["rent_due"],
         "payment_date": rent["payment_date"].strftime("%d/%m/%Y"),
         "standing_order": rent["standing_order"],
         "extra": rent["extra"]

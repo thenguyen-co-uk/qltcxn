@@ -10,9 +10,6 @@
         $('#week-commence').fdatepicker({
             format: 'dd/mm/yyyy'
         });
-        $('#rent-due').fdatepicker({
-            format: 'dd/mm/yyyy'
-        });
         $('#payment-date').fdatepicker({
             format: 'dd/mm/yyyy'
         });
@@ -34,7 +31,7 @@
         const newRent = {
             'tenant_id': $('#tenant-id').val(),
             'week_commence': convertToDateISO8601($('#week-commence').val()),
-            'rent_due': convertToDateISO8601($('#rent-due').val()),
+            'rent_due': $('#rent-due').val(),
             'payment_date': convertToDateISO8601($('#payment-date').val()),
             'standing_order': $('#standing-order').val(),
             'extra': $('#extra').val(),
@@ -65,7 +62,7 @@
         const updated = {
             'tenant_id': $('#tenant-id').val(),
             'week_commence': convertToDateISO8601($('#week-commence').val()),
-            'rent_due': convertToDateISO8601($('#rent-due').val()),
+            'rent_due': $('#rent-due').val(),
             'payment_date': convertToDateISO8601($('#payment-date').val()),
             'standing_order': $('#standing-order').val(),
             'extra': $('#extra').val(),

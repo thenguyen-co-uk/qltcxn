@@ -41,7 +41,7 @@ class Rent(BaseModel):
     """
     tenant_id: str
     week_commence: date
-    rent_due: date
+    rent_due: float
     payment_date: date
     standing_order: float
     extra: float
