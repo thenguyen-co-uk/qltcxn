@@ -55,7 +55,7 @@ def get_rent(rent: Rent):
         total_balance += rent["meals"]
     if "notes" in rent:
         data["notes"] = rent["notes"]
-    data["total_balance"] = total_balance
+    data["total_balance"] = "{:.2f}".format(total_balance)
     return data
 
 
