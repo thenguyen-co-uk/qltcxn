@@ -1,7 +1,6 @@
 """
 The main app is defined in this file.
 """
-import json
 from datetime import datetime, date
 from pathlib import Path
 
@@ -123,11 +122,12 @@ async def update_tenant(tenant_object_id: str, tenant: Tenant):
         {"$set": dict(tenant)}, upsert=False
     )
 
-    return json.dumps({
+    return {
         "status_code": 200,
+        "message": f"tenant {tenant_object_id} updated",
         "acknowledged": result.acknowledged,
         "matched_count": result.matched_count
-    })
+    }
 
 @router.put("/rent/update/{rent_object_id}")
 async def update_rent(rent_object_id: str, rent: Rent):
@@ -141,26 +141,28 @@ async def update_rent(rent_object_id: str, rent: Rent):
         {"$set": dict(rent)}, upsert=False
     )
 
-    return json.dumps({
+    return {
         "status_code": 200,
+        "message": f"rent {rent_object_id} updated",
         "acknowledged": result.acknowledged,
         "matched_count": result.matched_count
-    })
+    }
 
 
 @router.put("/room/update/{room_object_id}")
-async def update_tenant(room_object_id: str, room: Room):
+async def update_room(room_object_id: str, room: Room):
     """Route: update a given room"""
     result = col_rooms.update_one(
         {"_id": ObjectId(room_object_id)},
         {"$set": dict(room)}, upsert=False
     )
 
-    return json.dumps({
+    return {
         "status_code": 200,
+        "message": f"room {room_object_id} updated",
         "acknowledged": result.acknowledged,
         "matched_count": result.matched_count
-    })
+    }
 
 
 @router.get("/rents")

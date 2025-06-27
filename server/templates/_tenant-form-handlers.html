@@ -70,6 +70,7 @@
             return response.json();
         }).then(data => {
             console.log(data);
+            toastr.success(data["message"]);
         }).catch(error => {
             console.error('Error: ', error);
         });
@@ -106,7 +107,6 @@
             return response.json();
         }).then(data => {
             console.log(data);
-            toastr.success(data["status_code"] + ": " + data["id"]);
         }).catch(error => {
             console.error('Error: ', error);
         });
