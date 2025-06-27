@@ -1,0 +1,94 @@
+<script>
+    const btnAction = $('#btn-action');
+    $(document).ready(function () {
+        if ("{{ action }}" === "add")  {
+            toggleLockAndUnlockForm(false);
+            $(".income-property-readonly input").prop("readonly", false);
+            btnAction.val("Add");
+        }
+    });
+
+    function toggleLockAndUnlockForm(flag = false) {
+        $(".income-property-updatable input").prop("readonly", flag);
+        $(".income-property-updatable textarea").prop("readonly", flag);
+        $(".income-property-updatable select").prop("disabled", flag);
+    }
+
+    function extractData() {
+        return {
+            'for_tenant': $('#tenant').val(),
+            'description': $('#description').val(),
+            'amount': parseFloat($('#amount').val()),
+            'category': $('#category').val(),
+            'arrived_date': $('#arrived_date').val(),
+            'from_date': $('#from_date').val(),
+            'to_date': $('#to_date').val()
+        };
+    }
+
+    function saveChanges() {
+        console.log("updating the income...");
+        const URL = "/income/update/" + $('#_id').val();
+        const updated = extractData();
+        console.log(updated);
+        fetch(URL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(updated)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed!!!');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            toastr.success(data["message"]);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+
+        toggleLockAndUnlockForm(true);
+    }
+
+    function addNewIncome() {
+        console.log("adding a new income...");
+        const URL = "/income/add";
+        const newIncome = extractData();
+        console.log(newIncome);
+        fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(newIncome)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed!!!');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            toastr.success(data["status_code"] + ": " + data["id"]);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+    }
+
+    btnAction.on('click', function () {
+        let val = $(this).val();
+        if (val === "Save") {
+            saveChanges();
+        } else if (val === "Update") {
+            toggleLockAndUnlockForm(false);
+        } else if (val === "Add") {
+            addNewIncome();
+            return;
+        }
+        val = val === "Update" ? "Save" : "Update";
+        $(this).val(val);
+    });
+</script>

@@ -2,6 +2,9 @@
 This script defines domain-objects classes to capture all logic data of the app.
 """
 from datetime import date, datetime
+from enum import Enum
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -57,3 +60,29 @@ class Room(BaseModel):
     name: str
     description: str
     area: str
+
+
+class IncomeEnum(str, Enum):
+    """
+    This class is used to define the income type
+    """
+    STANDING_ORDER = 'Standing Order'
+    HOUSING_BENEFIT = 'Housing Benefit'
+    REFUND = 'Refund'
+
+
+class Income(BaseModel):
+    """
+    This class is used to hold all incomes
+    """
+    for_tenant: str # Tenant ID
+    description: str
+    amount: float
+    # category: Standing Order, Refund, Housing Benefit
+    category: IncomeEnum
+    # date when the income arrives - this matches with the item on bank
+    # statement
+    arrived_date: date
+    # if the category is Housing Benefit, from_date and to_date are required
+    from_date: Optional[date] = None
+    to_date: Optional[date] = None

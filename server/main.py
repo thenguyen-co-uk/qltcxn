@@ -3,6 +3,7 @@ The main app is defined in this file.
 """
 from datetime import datetime, date
 from pathlib import Path
+from urllib import request
 
 from bson import ObjectId
 from fastapi import FastAPI, APIRouter, HTTPException, Request
@@ -10,9 +11,10 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from config import db
-from database.schemas import get_all_records, get_rent, get_room, get_task, \
+from database.schemas import get_all_records, get_income, get_rent, get_room, \
+    get_task, \
     get_tenant
-from database.models import Rent, Room, Tenant, Todo
+from database.models import Income, IncomeEnum, Rent, Room, Tenant, Todo
 
 app = FastAPI()
 router = APIRouter()
@@ -20,9 +22,23 @@ col_tasks = db["tasks"]
 col_tenants = db["tenant"]
 col_rents = db["rent"]
 col_rooms = db["room"]
+col_incomes = db["income"]
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
+
+
+def reconcile(income: Income):
+    """
+    Reconciles the dates of the income
+    """
+    t = income.arrived_date
+    income.arrived_date = datetime(t.year, t.month, t.day, 0, 0, 0)
+    t = income.from_date
+    income.from_date = datetime(t.year, t.month, t.day, 0, 0, 0)
+    t = income.to_date
+    income.to_date = datetime(t.year, t.month, t.day, 0, 0, 0)
+    return income
 
 
 @router.get("/tasks")
@@ -61,18 +77,18 @@ async def delete_tenant(request: Request, _id: str):
     }
 
 
-@router.post("/tenant/add")
-async def add_tenant(new_tenant: Tenant):
-    """Route: add a tenant"""
-    try:
-        d = dict(new_tenant)
-        date_format = '%Y-%m-%d'
-        d["dob"] = datetime.strptime(str(d["dob"]), date_format)
-        resp = col_tenants.insert_one(d)
-        return {"status_code": 200, "id": str(resp.inserted_id)}
-    except Exception as e:
-        return HTTPException(status_code=500,
-                             detail=f"Some errors happened {e}")
+@router.get("/income/{id}", response_class=HTMLResponse)
+async def read_income(request: Request, id: str):
+    """Route: read an income"""
+    income = col_incomes.find_one({"_id": ObjectId(id)})
+    income = get_income(income)
+    ctx = {
+        "request": request,
+        "id": id,
+        "income": income,
+        "action": "read"
+    }
+    return templates.TemplateResponse("income.html", ctx)
 
 
 @router.get("/rent/{id}", response_class=HTMLResponse)
@@ -110,6 +126,23 @@ async def read_tenant(request: Request, id: str):
     )
 
 
+@router.put("/income/update/{income_object_id}")
+async def update_income(income_object_id: str, income: Income):
+    """Route: update a given income"""
+    income = reconcile(income)
+    result = col_incomes.update_one(
+        {"_id": ObjectId(income_object_id)},
+        {"$set": dict(income)}, upsert=False
+    )
+
+    return {
+        "status_code": 200,
+        "message": f"tenant {income_object_id} updated",
+        "acknowledged": result.acknowledged,
+        "matched_count": result.matched_count
+    }
+
+
 @router.put("/tenant/update/{tenant_object_id}")
 async def update_tenant(tenant_object_id: str, tenant: Tenant):
     """Route: update a given tenant"""
@@ -128,6 +161,7 @@ async def update_tenant(tenant_object_id: str, tenant: Tenant):
         "acknowledged": result.acknowledged,
         "matched_count": result.matched_count
     }
+
 
 @router.put("/rent/update/{rent_object_id}")
 async def update_rent(rent_object_id: str, rent: Rent):
@@ -177,6 +211,17 @@ async def retrieve_rent(id: str):
     return {"message": f"rent {id}"}
 
 
+@router.get("/incomes/list", response_class=HTMLResponse)
+async def list_all_incomes(request: Request):
+    """Route: get incomes list"""
+    data = get_all_records(get_income, col_incomes.find())
+    ctx = {
+        "request": request,
+        "incomes": data
+    }
+    return templates.TemplateResponse("income-list.html", ctx)
+
+
 @router.get("/rents/list", response_class=HTMLResponse)
 async def list_all_rents(request: Request):
     """Route: show all rents"""
@@ -199,6 +244,23 @@ async def list_all_tenants(request: Request):
     data = get_all_records(get_tenant, col_tenants.find())
     ctx = {"request": request, "data": data}
     return templates.TemplateResponse("tenant-list.html", ctx)
+
+
+@router.post("/income/add")
+async def add_income(new_income: Income):
+    """Route: add an income"""
+    try:
+        d = dict(new_income)
+        # new_income["category"] = IncomeEnum.STANDING_ORDER
+        date_format = '%Y-%m-%d'
+        d["arrived_date"] = datetime.strptime(str(d["arrived_date"]), date_format)
+        d["from_date"] = datetime.strptime(str(d["from_date"]), date_format)
+        d["to_date"] = datetime.strptime(str(d["to_date"]), date_format)
+        resp = col_incomes.insert_one(d)
+        return {"status_code": 200, "id": str(resp.inserted_id)}
+    except Exception as e:
+        return HTTPException(status_code=500,
+                             detail=f"Some errors happened {e}")
 
 
 @router.post("/room/add")
@@ -224,6 +286,32 @@ async def add_rent(new_rent: Rent):
     except Exception as e:
         return HTTPException(status_code=500,
                              detail=f"Some errors happened {e}")
+
+
+@router.post("/tenant/add")
+async def add_tenant(new_tenant: Tenant):
+    """Route: add a tenant"""
+    try:
+        d = dict(new_tenant)
+        date_format = '%Y-%m-%d'
+        d["dob"] = datetime.strptime(str(d["dob"]), date_format)
+        resp = col_tenants.insert_one(d)
+        return {"status_code": 200, "id": str(resp.inserted_id)}
+    except Exception as e:
+        return HTTPException(status_code=500,
+                             detail=f"Some errors happened {e}")
+
+
+@router.get("/add/income", response_class=HTMLResponse)
+async def render_add_income(request: Request):
+    """Route: render the form to add an income"""
+    dt_now = datetime.now()
+    d_now = dt_now.date()
+    income = Income(id=0, description="", amount=0, for_tenant="LKPHUNG",
+                    category=IncomeEnum.STANDING_ORDER, arrived_date=d_now,
+                    from_date=d_now, to_date=d_now)
+    ctx_dict = {"request": request, "income": income, "action": "add"}
+    return templates.TemplateResponse("income-add.html", ctx_dict)
 
 
 @router.get("/add/rent", response_class=HTMLResponse)

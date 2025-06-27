@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Incomes List | ALH</title>
+    {% include('_head.html') %}
+</head>
+<body>
+<div class="grid-container">
+    {% include('_menubar.html') %}
+    <div class="gird-x grid-padding-x" style="margin-top: 5px">
+        <div class="cell small-12 medium-12 large-12">
+            <label for="btn-add-new-room"></label>
+            <input type="button" class="button" id="btn-add-new-income" value="Add a new income">
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x">
+        <div class="large-12 cell">
+            <table id="myTable" class="display">
+                <thead>
+                <tr>
+                    <th>Object ID</th>
+                    <th>For Tenant</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Date Arrived</th>
+                    <th>Date From</th>
+                    <th>Date To</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for income in incomes %}
+                    <tr>
+                        <td><a href="{{ url_for('read_income', id=income._id) }}">...{{ income._id[-6:] }}</a></td>
+                        <td>{{ income.for_tenant }}</td>
+                        <td>{{ income.description }}</td>
+                        <td>{{ income.amount }}</td>
+                        <td>{{ income.category }}</td>
+                        <td>{{ income.arrived_date }}</td>
+                        <td>{{ income.from_date }}</td>
+                        <td>{{ income.to_date }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include '_foot.html' %}
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+    $('#btn-add-new-income').on("click", function () {
+        window.location.href = "/add/income"
+    });
+</script>
+</body>
+</html>
