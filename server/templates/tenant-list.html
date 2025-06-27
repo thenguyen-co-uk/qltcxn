@@ -44,7 +44,10 @@
                         <td>{{ tenant.creation }}</td>
                         <td>{{ tenant.modification }}</td>
                         <td>{{ tenant.notes }}</td>
-                        <td><a id="{{ tenant._id }}" class="delete-tenant">Delete</a></td>
+                        <td>
+                            <a id="{{ tenant._id }}" class="delete-tenant">Delete</a>&nbsp;
+                            <a id="{{ tenant._id }}" class="archive-tenant">Archive</a>
+                        </td>
                     </tr>
                 {% endfor %}
 
@@ -63,6 +66,15 @@
     $('#btn-add-new-tenant').on("click", function () {
         window.location.href = "/add/tenant"
     });
+
+    $(".archive-tenant").on("click", function () {
+        if (!confirm("Are you sure to archive this record?")) {
+            return false;
+        } else {
+            console.log("This feature will be done asap");
+        }
+    });
+
     $(".delete-tenant").on("click", function () {
         if (!confirm("Are you sure to delete this record?")) {
             return false;
