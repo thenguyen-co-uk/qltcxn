@@ -82,10 +82,14 @@ async def read_rent(request: Request, id: str):
     rent = col_rents.find_one({"_id": ObjectId(id)})
     rent = get_rent(rent)
     tenants = get_all_records(get_tenant, col_tenants.find())
-    return templates.TemplateResponse(
-        "rent.html",
-        {"request": request, "id": id, "rent": rent, "tenants": tenants}
-    )
+    ctx = {
+        "request": request,
+        "id": id,
+        "rent": rent,
+        "tenants": tenants,
+        "action": "read"
+    }
+    return templates.TemplateResponse("rent.html", ctx)
 
 
 @router.get("/room/{id}", response_class=HTMLResponse)

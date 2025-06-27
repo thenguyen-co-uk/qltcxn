@@ -4,6 +4,9 @@
         {% for tenant in tenants %}
         $('#tenant-id').append(new Option("{{ tenant['name'] }}", "{{ tenant['id'] }}"));
         {% endfor %}
+        if ('read' === "{{ action }}") {
+            $('#tenant-id').val("{{ rent.tenant_id }}");
+        }
         $('#week-commence').fdatepicker({
             format: 'dd/mm/yyyy'
         });
@@ -13,7 +16,6 @@
         $('#payment-date').fdatepicker({
             format: 'dd/mm/yyyy'
         });
-        console.log("{{ action }}");
         if ("{{ action }}" === "add")  {
             toggleLockAndUnlockForm(false);
             btnAction.val("Add");
