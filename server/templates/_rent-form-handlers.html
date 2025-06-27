@@ -25,18 +25,26 @@
         $(".rent-property-updatable select").prop("disabled", flag);
     }
 
-    function addNewRent() {
-        console.log("the implementation is in progress");
-        const URL = "/rent/add/";
+    function extractData() {
         const newRent = {
             'tenant_id': $('#tenant-id').val(),
             'week_commence': convertToDateISO8601($('#week-commence').val()),
             'rent_due': $('#rent-due').val(),
+            'services': $('#services').val(),
+            'utilities': $('#utilities').val(),
+            'meals': $('#meals').val(),
+            'extra': $('#extra').val(),
             'payment_date': convertToDateISO8601($('#payment-date').val()),
             'standing_order': $('#standing-order').val(),
-            'extra': $('#extra').val(),
             'notes': $('#notes').val()
         };
+        return newRent;
+    }
+
+    function addNewRent() {
+        console.log("the implementation is in progress");
+        const URL = "/rent/add/";
+        const newRent = extractData();
         console.log(newRent);
         fetch(URL, {
             method: 'POST',
@@ -59,15 +67,7 @@
 
     function saveChanges() {
         const URL = "/rent/update/" + $('#_id').val();
-        const updated = {
-            'tenant_id': $('#tenant-id').val(),
-            'week_commence': convertToDateISO8601($('#week-commence').val()),
-            'rent_due': $('#rent-due').val(),
-            'payment_date': convertToDateISO8601($('#payment-date').val()),
-            'standing_order': $('#standing-order').val(),
-            'extra': $('#extra').val(),
-            'notes': $('#notes').val()
-        };
+        const updated = extractData();
         console.log(updated);
         fetch(URL, {
             method: 'PUT',

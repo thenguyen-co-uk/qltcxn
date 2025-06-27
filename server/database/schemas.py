@@ -43,8 +43,19 @@ def get_rent(rent: Rent):
         "standing_order": rent["standing_order"],
         "extra": rent["extra"]
     }
+    total_balance = rent["rent_due"] + rent["extra"]
+    if "services" in rent:
+        data["services"] = rent["services"]
+        total_balance += rent["services"]
+    if "utilities" in rent:
+        data["utilities"] = rent["utilities"]
+        total_balance += rent["utilities"]
+    if "meals" in rent:
+        data["meals"] = rent["meals"]
+        total_balance += rent["meals"]
     if "notes" in rent:
         data["notes"] = rent["notes"]
+    data["total_balance"] = total_balance
     return data
 
 

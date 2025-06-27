@@ -11,13 +11,19 @@
             <label for="week-commence">Week Commence</label>
             <input type="text" id="week-commence" value="{{ rent['week_commence'] }}" readonly>
             <label for="rent-due">Rent Due</label>
-            <input type="text" id="rent-due" value="{{ rent['rent_due'] }}" readonly>
+            <input type="number" id="rent-due" value="{{ rent['rent_due'] }}" readonly>
+            <label for="services">Services</label>
+            <input type="number" id="services" value="{{ rent['services'] }}" readonly>
+            <label for="utilities">Utilities</label>
+            <input type="number" id="utilities" value="{{ rent['utilities'] }}" readonly>
+            <label for="meals">Meals</label>
+            <input type="number" id="meals" value="{{ rent['meals'] }}" readonly>
+            <label for="extra">Extra</label>
+            <input type="number" id="extra" value="{{ rent['extra'] }}" readonly>
+            <label for="standing-order">Standing Order</label>
+            <input type="number" id="standing-order" value="{{ rent['standing_order'] }}" readonly>
             <label for="payment-date">Payment Date</label>
             <input type="text" id="payment-date" value="{{ rent['payment_date'] }}" readonly>
-            <label for="standing-order">Standing Order</label>
-            <input type="text" id="standing-order" value="{{ rent['standing_order'] }}" readonly>
-            <label for="extra">Extra</label>
-            <input type="text" id="extra" value="{{ rent['extra'] }}" readonly>
             {#<label for="date-creation">Date of Creation</label>
             <input type="text" id="date-creation" value="{{ rent['creation'] }}" readonly>
             <label for="date-modification">Date of Modification</label>

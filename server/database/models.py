@@ -42,9 +42,13 @@ class Rent(BaseModel):
     tenant_id: str
     week_commence: date
     rent_due: float
+    services: float
+    utilities: float
+    meals: float
+    extra: float
+    # the date when the standing order is operated
     payment_date: date
     standing_order: float
-    extra: float
     notes: str
 
 

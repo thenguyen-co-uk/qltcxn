@@ -180,8 +180,8 @@ async def retrieve_rent(id: str):
 async def list_all_rents(request: Request):
     """Route: show all rents"""
     data = get_all_records(get_rent, col_rents.find())
-    return templates.TemplateResponse("rent-list.html",
-                                      {"request": request, "data": data})
+    ctx = {"request": request, "rents": data}
+    return templates.TemplateResponse("rent-list.html", ctx)
 
 
 @router.get("/rooms/list", response_class=HTMLResponse)
@@ -237,6 +237,7 @@ async def render_add_rent(request: Request):
                 rent_due=0.0,
                 payment_date=date(year, month, day),
                 standing_order=0.0,
+                services=0.0, utilities=0.0, meals=0.0,
                 extra=0.0, notes="")
     rent.week_commence = rent.week_commence.strftime("%d/%m/%Y")
     rent.payment_date = rent.payment_date.strftime("%d/%m/%Y")
