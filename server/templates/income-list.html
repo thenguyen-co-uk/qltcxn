@@ -36,9 +36,9 @@
                         <td>{{ income.description }}</td>
                         <td>{{ income.amount }}</td>
                         <td>{{ income.category }}</td>
-                        <td>{{ income.arrived_date }}</td>
-                        <td>{{ income.from_date }}</td>
-                        <td>{{ income.to_date }}</td>
+                        <td>{{ income.arrived_date.strftime("%d/%m/%Y") }}</td>
+                        <td>{{ income.from_date.strftime("%d/%m/%Y") }}</td>
+                        <td>{{ income.to_date.strftime("%d/%m/%Y") }}</td>
                     </tr>
                 {% endfor %}
 

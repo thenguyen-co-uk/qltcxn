@@ -78,9 +78,9 @@ def get_income(income: Income):
         "description": income["description"],
         "amount": income["amount"],
         "category": income["category"],
-        "arrived_date": income["arrived_date"].date(),#.strftime("%d/%m/%Y"),
-        "from_date": income["from_date"].date(),#.strftime("%d/%m/%Y"),
-        "to_date": income["to_date"].date()#.strftime("%d/%m/%Y")
+        "arrived_date": income["arrived_date"].date(),
+        "from_date": income["from_date"].date(),
+        "to_date": income["to_date"].date()
     }
     return data
 
