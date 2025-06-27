@@ -2,7 +2,13 @@ $(document).foundation();
 
 function convertToDateISO8601(strDate) {
     const parts = strDate.split("/");
-    const isoDate = new Date(parts[2], parts[1], parts[0]).toISOString();
+    // because the view shows and the datetime picker is set dd/mm/yyyy
+    // JavaScript counts months from 0 to 11;
+    // hours=2 makes sure that the system instantiates the exact date
+    // chosen from the datetime picker regardless of BST
+    let isoDate = new Date(parts[2], parts[1]-1, parts[0],2,0,0);
+    isoDate = isoDate.toISOString();
+    console.log(isoDate);
     return isoDate.split('T')[0];
 }
 

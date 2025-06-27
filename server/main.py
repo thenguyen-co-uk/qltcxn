@@ -133,6 +133,7 @@ async def update_tenant(tenant_object_id: str, tenant: Tenant):
 async def update_rent(rent_object_id: str, rent: Rent):
     """Route: update a given rent"""
     dt = rent.week_commence
+    # because the view shows and the datetime picker is set dd/mm/yyyy
     rent.week_commence = datetime(dt.year, dt.month, dt.day, 0, 0, 0)
     dt = rent.payment_date
     rent.payment_date = datetime(dt.year, dt.month, dt.day, 0, 0, 0)
