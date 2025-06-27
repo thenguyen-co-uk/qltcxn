@@ -11,14 +11,16 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from config import db
-from database.schemas import get_all_records, get_rent, get_task, get_tenant
-from database.models import Rent, Tenant, Todo
+from database.schemas import get_all_records, get_rent, get_room, get_task, \
+    get_tenant
+from database.models import Rent, Room, Tenant, Todo
 
 app = FastAPI()
 router = APIRouter()
 col_tasks = db["tasks"]
 col_tenants = db["tenant"]
 col_rents = db["rent"]
+col_rooms = db["room"]
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
@@ -47,14 +49,6 @@ async def get_all_tenants():
     """Route: gets all tenants"""
     data = col_tenants.find()
     return get_all_records(get_tenant, data)
-
-
-@router.get("/tenants/list", response_class=HTMLResponse)
-async def list_all_tenants(request: Request):
-    """Route: show all tenants"""
-    data = get_all_records(get_tenant, col_tenants.find())
-    return templates.TemplateResponse("tenant-list.html",
-                                      {"request": request, "data": data})
 
 
 @router.delete("/tenant/delete/{_id}")
@@ -93,6 +87,14 @@ async def read_rent(request: Request, id: str):
         {"request": request, "id": id, "rent": rent, "tenants": tenants}
     )
 
+
+@router.get("/room/{id}", response_class=HTMLResponse)
+async def read_room(request: Request, id: str):
+    """Route: read a room from the database"""
+    room = col_rooms.find_one({"_id": ObjectId(id)})
+    room = get_room(room)
+    ctx = {"request": request, "id": id, "room": room}
+    return templates.TemplateResponse("room.html", ctx)
 
 @router.get("/tenant/{id}", response_class=HTMLResponse)
 async def read_tenant(request: Request, id: str):
@@ -144,6 +146,21 @@ async def update_rent(rent_object_id: str, rent: Rent):
     })
 
 
+@router.put("/room/update/{room_object_id}")
+async def update_tenant(room_object_id: str, room: Room):
+    """Route: update a given room"""
+    result = col_rooms.update_one(
+        {"_id": ObjectId(room_object_id)},
+        {"$set": dict(room)}, upsert=False
+    )
+
+    return json.dumps({
+        "status_code": 200,
+        "acknowledged": result.acknowledged,
+        "matched_count": result.matched_count
+    })
+
+
 @router.get("/rents")
 async def get_all_rents():
     """Route: gets all rents"""
@@ -164,6 +181,33 @@ async def list_all_rents(request: Request):
     return templates.TemplateResponse("rent-list.html",
                                       {"request": request, "data": data})
 
+
+@router.get("/rooms/list", response_class=HTMLResponse)
+async def list_all_rooms(request: Request):
+    """Route: list all rooms"""
+    rooms = get_all_records(get_room, col_rooms.find())
+    ctx = {"request": request, "rooms": rooms}
+    return templates.TemplateResponse("room-list.html", ctx)
+
+
+@router.get("/tenants/list", response_class=HTMLResponse)
+async def list_all_tenants(request: Request):
+    """Route: show all tenants"""
+    data = get_all_records(get_tenant, col_tenants.find())
+    ctx = {"request": request, "data": data}
+    return templates.TemplateResponse("tenant-list.html", ctx)
+
+
+@router.post("/room/add")
+async def add_room(new_room: Room):
+    """Route: add a room"""
+    try:
+        d = dict(new_room)
+        resp = col_rooms.insert_one(d)
+        return {"status_code": 200, "id": str(resp.inserted_id)}
+    except Exception as e:
+        return HTTPException(status_code=500,
+                             detail=f"Some errors happened {e}")
 
 @router.post("/rent/add")
 async def add_rent(new_rent: Rent):
@@ -201,11 +245,22 @@ async def render_add_rent(request: Request):
         {"request": request, "rent": rent, "action": "add", "tenants": tenants})
 
 
+@router.get("/add/room", response_class=HTMLResponse)
+async def render_add_room(request: Request):
+    """Route: render the form to add a room"""
+    room = Room(id="", name="room", description="", area="")
+    ctx = {
+        "request": request,
+        "room": room,
+        "action": "add"
+    }
+    return templates.TemplateResponse("room-add.html", ctx)
+
 @router.get("/add/tenant", response_class=HTMLResponse)
 async def render_add_tenant(request: Request):
     """Route: render the form to add a tenant"""
-    dtnow = datetime.now()
-    dob = dtnow.date()
+    dt_now = datetime.now()
+    dob = dt_now.date()
     tenant = Tenant(id="", name="", dob=dob, gender="male", room="", hb=True,
                     notes="", creation=0, modification=0)
     ctx_dict = {"request": request, "name": "Tung", "tenant": tenant, "action": "add"}

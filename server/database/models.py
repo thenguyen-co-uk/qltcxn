@@ -46,4 +46,13 @@ class Rent(BaseModel):
     standing_order: float
     extra: float
     notes: str
-    
+
+
+class Room(BaseModel):
+    """
+    This class is used to hold all rooms
+    """
+    id: str
+    name: str
+    description: str
+    area: str

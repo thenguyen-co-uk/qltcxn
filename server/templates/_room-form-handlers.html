@@ -1,0 +1,91 @@
+<script>
+    const btnAction = $('#btn-action');
+    $(document).ready(function () {
+        if ("{{ action }}" === "add")  {
+            toggleLockAndUnlockForm(false);
+            $(".room-property-readonly input").prop("readonly", false);
+            btnAction.val("Add");
+        }
+    });
+
+    function toggleLockAndUnlockForm(flag = false) {
+        $(".room-property-updatable input").prop("readonly", flag);
+        $(".room-property-updatable textarea").prop("readonly", flag);
+        $(".room-property-updatable select").prop("disabled", flag);
+    }
+
+    function saveChanges() {
+        console.log("updating the room...");
+        const URL = "/room/update/" + $('#_id').val();
+        const updated = {
+            'id': $('#id').val(),
+            'name': $('#name').val(),
+            'description': $('#description').val(),
+            'area': $('#area').val(),
+        };
+        console.log(updated);
+        fetch(URL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(updated)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed!!!');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+
+        toggleLockAndUnlockForm(true);
+    }
+
+    function addNewRoom() {
+        console.log("adding a new room...");
+        const URL = "/room/add";
+        const newRoom = {
+            'id': $('#id').val(),
+            'name': $('#name').val(),
+            'description': $('#description').val(),
+            'area': $('#area').val(),
+        };
+        console.log(newRoom);
+        fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(newRoom)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed!!!');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            toastr.success(data["status_code"] + ": " + data["id"]);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+    }
+
+    btnAction.on('click', function () {
+        let val = $(this).val();
+        if (val === "Save") {
+            saveChanges();
+        } else if (val === "Update") {
+            toggleLockAndUnlockForm(false);
+        } else if (val === "Add") {
+            addNewRoom();
+            return;
+        }
+        val = val === "Update" ? "Save" : "Update";
+        $(this).val(val);
+    });
+</script>

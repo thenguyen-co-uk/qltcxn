@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Room Details | ALH</title>
+    {% include('_head.html') %}
+</head>
+<body>
+<div class="grid-container">
+    {% include('_menubar.html') %}
+    <div class="grid-x grid-padding-x">
+        <div class="large-12 cell">
+            {% if id %}
+            <h2>Room {{ id }}</h2>
+            {% else %}
+            <h2>Add a new room</h2>
+            {% endif %}
+            {% include "_room-form.html" %}
+        </div>
+    </div>
+</div>
+
+{% include '_foot.html' %}
+<script>
+    $(document).ready( function () {
+        //$('#myTable').DataTable();
+
+    } );
+</script>
+{% include '_room-form-handlers.html' %}
+</body>
+</html>

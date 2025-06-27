@@ -1,0 +1,20 @@
+<form>
+    <div style="display: none"><label for="_id">MongoDB ID</label>
+        <input type="text" id="_id" value="{{ room['_id'] }}" readonly></div>
+    <div class="room-property">
+        <div class="room-property-updatable">
+            <label for="id">Room ID</label>
+            <input type="text" id="id" value="{{ room['id'] }}" readonly>
+        </div>
+        <div class="room-property-updatable">
+            <label for="name">Name</label>
+            <input type="text" id="name" value="{{ room['name'] }}" readonly>
+            <label for="description">Description</label>
+            <textarea id="description" readonly>{{ room["description"] }}</textarea>
+            <label for="area">Area</label>
+            <input type="text" id="area" value="{{ room['area'] }}" readonly>
+        </div>
+    </div>
+    <label for="btn-action"></label>
+    <input type="button" id="btn-action" class="button" value="Update">
+</form>

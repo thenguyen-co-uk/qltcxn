@@ -3,7 +3,7 @@ This script defines all operations.
 """
 from datetime import datetime
 
-from database.models import Rent, Tenant
+from database.models import Rent, Room, Tenant
 
 
 def get_task(todo):
@@ -48,6 +48,17 @@ def get_rent(rent: Rent):
     return data
 
 
+def get_room(room: Room):
+    """ Returns the rooms information of a given room """
+    data = {
+        "_id": str(room["_id"]),
+        "id": str(room["id"]),
+        "name": room["name"],
+        "description": room["description"],
+        "area": room["area"],
+    }
+
+    return data
 def get_all_records(get_record_function, all_records):
     """ Returns all records """
     return [get_record_function(record) for record in all_records]
