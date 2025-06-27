@@ -46,9 +46,6 @@ class Rent(BaseModel):
     utilities: float
     meals: float
     extra: float
-    # the date when the standing order is operated
-    payment_date: date
-    standing_order: float
     notes: str
 
 

@@ -39,8 +39,6 @@ def get_rent(rent: Rent):
         "tenant_id": rent["tenant_id"],
         "week_commence": rent["week_commence"].strftime("%d/%m/%Y"),
         "rent_due": rent["rent_due"],
-        "payment_date": rent["payment_date"].strftime("%d/%m/%Y"),
-        "standing_order": rent["standing_order"],
         "extra": rent["extra"]
     }
     total_balance = rent["rent_due"] + rent["extra"]

@@ -135,8 +135,6 @@ async def update_rent(rent_object_id: str, rent: Rent):
     dt = rent.week_commence
     # because the view shows and the datetime picker is set dd/mm/yyyy
     rent.week_commence = datetime(dt.year, dt.month, dt.day, 0, 0, 0)
-    dt = rent.payment_date
-    rent.payment_date = datetime(dt.year, dt.month, dt.day, 0, 0, 0)
     result = col_rents.update_one(
         {"_id": ObjectId(rent_object_id)},
         {"$set": dict(rent)}, upsert=False
@@ -221,7 +219,6 @@ async def add_rent(new_rent: Rent):
         d = dict(new_rent)
         date_format = '%Y-%m-%d'
         d["week_commence"] = datetime.strptime(str(d["week_commence"]), date_format)
-        d["payment_date"] = datetime.strptime(str(d["payment_date"]), date_format)
         resp = col_rents.insert_one(d)
         return {"status_code": 200, "id": str(resp.inserted_id)}
     except Exception as e:
@@ -237,13 +234,9 @@ async def render_add_rent(request: Request):
     day = datetime.now().day
     rent = Rent(tenant_id="",
                 week_commence=date(year, month, day),
-                rent_due=0.0,
-                payment_date=date(year, month, day),
-                standing_order=0.0,
-                services=0.0, utilities=0.0, meals=0.0,
+                rent_due=0.0, services=0.0, utilities=0.0, meals=0.0,
                 extra=0.0, notes="")
     rent.week_commence = rent.week_commence.strftime("%d/%m/%Y")
-    rent.payment_date = rent.payment_date.strftime("%d/%m/%Y")
     tenants = get_all_records(get_tenant, col_tenants.find())
     return templates.TemplateResponse("rent-add.html",
         {"request": request, "rent": rent, "action": "add", "tenants": tenants})
