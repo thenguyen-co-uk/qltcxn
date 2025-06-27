@@ -20,6 +20,7 @@ def get_tenant(tenant: Tenant):
     """ Returns the tenant information of a given tenant """
     return {
         "_id": str(tenant["_id"]),
+        "id": tenant["id"],
         "name": tenant["name"],
         "dob": tenant["dob"].strftime("%d/%m/%Y"),
         "gender": tenant["gender"],
