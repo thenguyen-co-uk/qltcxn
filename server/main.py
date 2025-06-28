@@ -136,11 +136,11 @@ async def reports(request: Request):
     return templates.TemplateResponse("reports.html", ctx)
 
 
-@router.get("/report/rent-payment", response_class=HTMLResponse)
-async def report_rent_payment(request: Request):
+@router.get("/reports/rent-payment", response_class=HTMLResponse)
+async def reports_rent_payment(request: Request):
     """Route: render the reports page for the incomes"""
     ctx = {"request": request}
-    return templates.TemplateResponse("report-rent-payment.html", ctx)
+    return templates.TemplateResponse("reports-rent-payment.html", ctx)
 
 
 @router.put("/income/update/{income_object_id}")
