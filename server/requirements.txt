@@ -4,3 +4,4 @@ uvicorn
 pymongo~=4.13.2
 pylint
 pydantic~=2.11.7
+python-dateutil
