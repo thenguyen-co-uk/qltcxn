@@ -1,10 +1,18 @@
 <script>
     const btnAction = $('#btn-action');
+    const incomeCategory = $('#category');
     $(document).ready(function () {
         if ("{{ action }}" === "add")  {
             toggleLockAndUnlockForm(false);
             $(".income-property-readonly input").prop("readonly", false);
             btnAction.val("Add");
+        }
+        {% for cate in categories %}
+            incomeCategory.append(new Option("{{ cate['name'] }}", "{{ cate['name'] }}"));
+        {% endfor %}
+        if ('read' === "{{ action }}") {
+            incomeCategory.val("{{ category }}").change();
+            incomeCategory.attr("disabled", "disabled");
         }
     });
 

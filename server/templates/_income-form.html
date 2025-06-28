@@ -12,8 +12,7 @@
             <label for="amount">Amount</label>
             <input type="number" id="amount" value="{{ income['amount'] }}" readonly>
             <label for="category">Category</label>
-            <input type="text" id="category" value="{{ income['category'] }}" readonly>
-
+            <select name="categories" id="category" disabled></select>
             <label for="arrived_date">Arrived Date</label>
             <input type="date" id="arrived_date" value="{{ income['arrived_date'] }}" readonly>
             <label for="from_date">From Date</label>

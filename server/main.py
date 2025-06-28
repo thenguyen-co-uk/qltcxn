@@ -15,7 +15,7 @@ from database.schemas import get_all_records, get_income, get_rent, get_room, \
     get_task, \
     get_tenant
 from database.models import Income, IncomeEnum, Rent, Room, Tenant, Todo
-from utils.utilities import weeks_between
+from utils.utilities import income_categories, weeks_between
 
 app = FastAPI()
 router = APIRouter()
@@ -83,11 +83,15 @@ async def read_income(request: Request, id: str):
     """Route: read an income"""
     income = col_incomes.find_one({"_id": ObjectId(id)})
     income = get_income(income)
+    categories = income_categories()
+    r = [item for item in categories if item["id"] == income["category"]]
     ctx = {
         "request": request,
         "id": id,
         "income": income,
-        "action": "read"
+        "action": "read",
+        "categories": categories,
+        "category": str(r[0]["name"])
     }
     return templates.TemplateResponse("income.html", ctx)
 
@@ -120,11 +124,9 @@ async def read_room(request: Request, id: str):
 async def read_tenant(request: Request, id: str):
     """Route: display a tenant"""
     tenant = col_tenants.find_one({"id": id})
-    # tenant["dob"] = tenant["dob"].strftime("%Y-%m-%d")
     tenant = get_tenant(tenant)
-    return templates.TemplateResponse(
-        "tenant.html", {"request": request, "id": id, "tenant": tenant}
-    )
+    ctx = {"request": request, "id": id, "tenant": tenant}
+    return templates.TemplateResponse("tenant.html", ctx)
 
 
 @router.put("/income/update/{income_object_id}")
@@ -311,7 +313,13 @@ async def render_add_income(request: Request):
     income = Income(id=0, description="", amount=0, for_tenant="LKPHUNG",
                     category=IncomeEnum.STANDING_ORDER, arrived_date=d_now,
                     from_date=d_now, to_date=d_now)
-    ctx_dict = {"request": request, "income": income, "action": "add"}
+    categories = income_categories()
+    ctx_dict = {
+        "request": request,
+        "income": income,
+        "action": "add",
+        "categories": categories
+    }
     return templates.TemplateResponse("income-add.html", ctx_dict)
 
 

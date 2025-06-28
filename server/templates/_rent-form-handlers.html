@@ -5,7 +5,7 @@
         $('#tenant-id').append(new Option("{{ tenant['name'] }}", "{{ tenant['id'] }}"));
         {% endfor %}
         if ('read' === "{{ action }}") {
-            $('#tenant-id').val("{{ rent.tenant_id }}");
+            $('#tenant-id').val("{{ rent.tenant_id }}").change();
         }
         $('#week-commence').fdatepicker({
             format: 'dd/mm/yyyy'
