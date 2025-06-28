@@ -1,11 +1,12 @@
 <script defer>
     const btnAction = $('#btn-action');
+    const tenantId = $('#tenant-id');
     $(document).ready(function () {
         {% for tenant in tenants %}
-        $('#tenant-id').append(new Option("{{ tenant['name'] }}", "{{ tenant['id'] }}"));
+        tenantId.append(new Option("{{ tenant['name'] }}", "{{ tenant['id'] }}"));
         {% endfor %}
         if ('read' === "{{ action }}") {
-            $('#tenant-id').val("{{ rent.tenant_id }}").change();
+            tenantId.val("{{ rent.tenant_id }}").change();
         }
         $('#week-commence').fdatepicker({
             format: 'dd/mm/yyyy'
@@ -26,8 +27,8 @@
     }
 
     function extractData() {
-        const newRent = {
-            'tenant_id': $('#tenant-id').val(),
+        return {
+            'tenant_id': tenantId.val(),
             'week_commence': convertToDateISO8601($('#week-commence').val()),
             'rent_due': $('#rent-due').val(),
             'services': $('#services').val(),
@@ -36,7 +37,6 @@
             'extra': $('#extra').val(),
             'notes': $('#notes').val()
         };
-        return newRent;
     }
 
     function addNewRent() {
