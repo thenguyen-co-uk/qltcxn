@@ -252,10 +252,10 @@ async def add_income(new_income: Income):
     try:
         d = dict(new_income)
         # new_income["category"] = IncomeEnum.STANDING_ORDER
-        date_format = '%Y-%m-%d'
-        d["arrived_date"] = datetime.strptime(str(d["arrived_date"]), date_format)
-        d["from_date"] = datetime.strptime(str(d["from_date"]), date_format)
-        d["to_date"] = datetime.strptime(str(d["to_date"]), date_format)
+        df = '%Y-%m-%d'
+        d["arrived_date"] = datetime.strptime(str(d["arrived_date"]), df)
+        d["from_date"] = datetime.strptime(str(d["from_date"]), df)
+        d["to_date"] = datetime.strptime(str(d["to_date"]), df)
         resp = col_incomes.insert_one(d)
         return {"status_code": 200, "id": str(resp.inserted_id)}
     except Exception as e:
@@ -279,8 +279,8 @@ async def add_rent(new_rent: Rent):
     """Route: add a rent"""
     try:
         d = dict(new_rent)
-        date_format = '%Y-%m-%d'
-        d["week_commence"] = datetime.strptime(str(d["week_commence"]), date_format)
+        df = '%Y-%m-%d'
+        d["week_commence"] = datetime.strptime(str(d["week_commence"]), df)
         resp = col_rents.insert_one(d)
         return {"status_code": 200, "id": str(resp.inserted_id)}
     except Exception as e:
@@ -293,8 +293,8 @@ async def add_tenant(new_tenant: Tenant):
     """Route: add a tenant"""
     try:
         d = dict(new_tenant)
-        date_format = '%Y-%m-%d'
-        d["dob"] = datetime.strptime(str(d["dob"]), date_format)
+        df = '%Y-%m-%d'
+        d["dob"] = datetime.strptime(str(d["dob"]), df)
         resp = col_tenants.insert_one(d)
         return {"status_code": 200, "id": str(resp.inserted_id)}
     except Exception as e:
