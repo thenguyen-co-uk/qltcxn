@@ -1,6 +1,10 @@
 <script>
     const btnAction = $('#btn-action');
     const incomeCategory = $('#category');
+    const arrivedDate = $('#arrived_date');
+    const fromDate = $('#from_date');
+    const toDate = $('#to_date');
+
     $(document).ready(function () {
         if ("{{ action }}" === "add")  {
             toggleLockAndUnlockForm(false);
@@ -85,6 +89,21 @@
             console.error('Error: ', error);
         });
     }
+
+    arrivedDate.on("change", function () {
+        const cate = incomeCategory.val();
+        if (cate === "Standing Order") {
+            const d = calStartAndEndDayOfWeek($(this).val());
+            if (d) {
+                let begin = new Date(d[0]);
+                begin = begin.toISOString().split('T')[0];
+                fromDate.val(begin);
+                let end = new Date(d[1]);
+                end = end.toISOString().split('T')[0];
+                toDate.val(end);
+            }
+        }
+    });
 
     btnAction.on('click', function () {
         let val = $(this).val();

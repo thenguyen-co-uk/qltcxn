@@ -8,7 +8,6 @@ function convertToDateISO8601(strDate) {
     // chosen from the datetime picker regardless of BST
     let isoDate = new Date(parts[2], parts[1]-1, parts[0],2,0,0);
     isoDate = isoDate.toISOString();
-    console.log(isoDate);
     return isoDate.split('T')[0];
 }
 
