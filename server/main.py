@@ -42,6 +42,13 @@ def reconcile(income: Income):
     return income
 
 
+@router.get("/categories", response_class=HTMLResponse)
+async def categories(request: Request):
+    """ Renders the categories page """
+    ctx = {"request": request}
+    return templates.TemplateResponse("categories.html", ctx)
+
+
 @router.get("/tasks")
 async def get_all_todos():
     """Route: gets all tasks"""
