@@ -129,6 +129,20 @@ async def read_tenant(request: Request, id: str):
     return templates.TemplateResponse("tenant.html", ctx)
 
 
+@router.get("/reports", response_class=HTMLResponse)
+async def reports(request: Request):
+    """Route: render the reports page"""
+    ctx = {"request": request}
+    return templates.TemplateResponse("reports.html", ctx)
+
+
+@router.get("/reports/income", response_class=HTMLResponse)
+async def reports(request: Request):
+    """Route: render the reports page for the incomes"""
+    ctx = {"request": request}
+    return templates.TemplateResponse("reports-income.html", ctx)
+
+
 @router.put("/income/update/{income_object_id}")
 async def update_income(income_object_id: str, income: Income):
     """Route: update a given income"""

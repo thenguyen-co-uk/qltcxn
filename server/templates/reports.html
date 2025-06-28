@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Resident Rent | ALH</title>
+    <title>Reports | ALH</title>
     {% include('_head.html') %}
 </head>
 <body>
@@ -9,36 +9,10 @@
     {% include('_menubar.html') %}
     <div class="grid-x grid-padding-x">
         <div class="large-12 cell">
-            {% if id %}
-            <h2>Rent {{ id }}</h2>
-            {% else %}
-            <h2>Add a new rent</h2>
-            {% endif %}
-            {% include "_rent-form.html" %}
-            {#<table id="myTable" class="display">
-                <thead>
-                <tr>
-                    <th>Object ID</th>
-                    <th>Tenant/Room</th>
-                    <th>Week Commence</th>
-                    <th>Rent Due</th>
-                    <th>Extra</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for rent in data %}
-                    <tr>
-                        <td><a href="{{ url_for('read_rent', id=rent._id) }}">{{ rent._id }}</a></td>
-                        <td><a href="{{ url_for('read_tenant', id=rent['tenant_id']) }}">{{ rent.tenant_id }}</a></td>
-                        <td>{{ rent.week_commence }}</td>
-                        <td>{{ rent.rent_due }}</td>
-                        <td>{{ rent.standing_order }}</td>
-                        <td>{{ rent.extra }}</td>
-                    </tr>
-                {% endfor %}
-
-                </tbody>
-            </table>#}
+            <h3>Reports</h3>
+            <ul>
+                <li><a href="/reports/income">Incomes</a></li>
+            </ul>
         </div>
     </div>
 </div>
@@ -50,6 +24,5 @@
 
     } );
 </script>
-{% include '_rent-form-handlers.html' %}
 </body>
 </html>
