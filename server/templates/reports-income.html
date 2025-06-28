@@ -7,13 +7,68 @@
 <body>
 <div class="grid-container">
     {% include('_menubar.html') %}
+</div>
+
+<div class="grid-container">
     <div class="grid-x grid-padding-x">
-        <div class="large-12 cell">
+        <div class="small-12 large-12 cell">
             <h3>Reports for the incomes</h3>
         </div>
     </div>
 </div>
+<form id="search-form">
+<div class="grid-container">
+    <div class="grid-x grid-padding-x">
+        <div class="cell large-4">
+                <label for="tenant">Tenant</label>
+                <select id="tenant">
+                    <option value="phung">Phung</option>
+                    <option value="acam">Acam</option>
+                    <option value="lau">Lau</option>
+                </select>
+        </div>
+        <div class="cell large-4">
+            <label for="from-date">From Week/Date</label>
+            <input type="date" id="from-date">
+            <label for="to-date">To Week/Date</label>
+            <input type="date" id="to-date">
+        </div>
+        <div class="cell large-4">
+            <input type="button" class="button" value="Search">
+        </div>
+    </div>
+    {#<div class="row">
+        <div class="columns small-2 large-4">1</div>
+        <div class="columns small-4 large-4">2</div>
+        <div class="columns small-6 large-4">3</div>
+    </div>#}
+</div>
+</form>
 
+{#<form>
+<div class="grid-container">
+    <div class="grid-x grid-padding-x">
+        <div class="medium-6 cell">
+            <label>Input Label
+                <input type="text" placeholder=".medium-6.cell">
+            </label>
+        </div>
+        <div class="medium-6 cell">
+            <label>Input Label
+                <input type="text" placeholder=".medium-6.cell">
+            </label>
+        </div>
+    </div>
+</div>
+</form>#}
+
+<div class="grid-container">
+    <div class="row">
+        <div class="columns small-12 medium-12 large-12">
+            Hien thi ket qua o day
+        </div>
+    </div>
+</div>
 {% include '_foot.html' %}
 <script>
     $(document).ready( function () {
