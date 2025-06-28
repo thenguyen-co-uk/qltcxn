@@ -75,10 +75,11 @@ async def get_all_tenants():
 
 
 @router.delete("/tenant/delete/{_id}")
-async def delete_tenant(request: Request, _id: str):
+async def delete_tenant(req: Request, _id: str):
     """Route: delete a tenant"""
     result = col_tenants.find_one_and_delete({"_id": ObjectId(_id)})
     return {
+        "request": req,
         "status_code": 200,
         "_id": _id,
         "message": f"tenant {_id} deleted"
@@ -86,31 +87,31 @@ async def delete_tenant(request: Request, _id: str):
 
 
 @router.get("/income/{id}", response_class=HTMLResponse)
-async def read_income(request: Request, id: str):
+async def read_income(req: Request, id: str):
     """Route: read an income"""
     income = col_incomes.find_one({"_id": ObjectId(id)})
     income = get_income(income)
-    categories = income_categories()
-    r = [item for item in categories if item["id"] == income["category"]]
+    _categories = income_categories()
+    r = [item for item in _categories if item["id"] == income["category"]]
     ctx = {
-        "request": request,
+        "request": req,
         "id": id,
         "income": income,
         "action": "read",
-        "categories": categories,
+        "categories": _categories,
         "category": str(r[0]["name"])
     }
     return templates.TemplateResponse("income.html", ctx)
 
 
 @router.get("/rent/{id}", response_class=HTMLResponse)
-async def read_rent(request: Request, id: str):
+async def read_rent(req: Request, id: str):
     """Route: read a rent from the database"""
     rent = col_rents.find_one({"_id": ObjectId(id)})
     rent = get_rent(rent)
     tenants = get_all_records(get_tenant, col_tenants.find())
     ctx = {
-        "request": request,
+        "request": req,
         "id": id,
         "rent": rent,
         "tenants": tenants,
@@ -120,33 +121,33 @@ async def read_rent(request: Request, id: str):
 
 
 @router.get("/room/{id}", response_class=HTMLResponse)
-async def read_room(request: Request, id: str):
+async def read_room(req: Request, id: str):
     """Route: read a room from the database"""
     room = col_rooms.find_one({"_id": ObjectId(id)})
     room = get_room(room)
-    ctx = {"request": request, "id": id, "room": room}
+    ctx = {"request": req, "id": id, "room": room}
     return templates.TemplateResponse("room.html", ctx)
 
 @router.get("/tenant/{id}", response_class=HTMLResponse)
-async def read_tenant(request: Request, id: str):
+async def read_tenant(req: Request, id: str):
     """Route: display a tenant"""
     tenant = col_tenants.find_one({"id": id})
     tenant = get_tenant(tenant)
-    ctx = {"request": request, "id": id, "tenant": tenant}
+    ctx = {"request": req, "id": id, "tenant": tenant}
     return templates.TemplateResponse("tenant.html", ctx)
 
 
 @router.get("/reports", response_class=HTMLResponse)
-async def reports(request: Request):
+async def reports(req: Request):
     """Route: render the reports page"""
-    ctx = {"request": request}
+    ctx = {"request": req}
     return templates.TemplateResponse("reports.html", ctx)
 
 
 @router.get("/reports/rent-payment", response_class=HTMLResponse)
-async def reports_rent_payment(request: Request):
+async def reports_rent_payment(req: Request):
     """Route: render the reports page for the incomes"""
-    ctx = {"request": request}
+    ctx = {"request": req}
     return templates.TemplateResponse("reports-rent-payment.html", ctx)
 
 
@@ -236,37 +237,37 @@ async def retrieve_rent(id: str):
 
 
 @router.get("/incomes/list", response_class=HTMLResponse)
-async def list_all_incomes(request: Request):
+async def list_all_incomes(req: Request):
     """Route: get incomes list"""
     data = get_all_records(get_income, col_incomes.find())
     ctx = {
-        "request": request,
+        "request": req,
         "incomes": data
     }
     return templates.TemplateResponse("income-list.html", ctx)
 
 
 @router.get("/rents/list", response_class=HTMLResponse)
-async def list_all_rents(request: Request):
+async def list_all_rents(req: Request):
     """Route: show all rents"""
     data = get_all_records(get_rent, col_rents.find())
-    ctx = {"request": request, "rents": data}
+    ctx = {"request": req, "rents": data}
     return templates.TemplateResponse("rent-list.html", ctx)
 
 
 @router.get("/rooms/list", response_class=HTMLResponse)
-async def list_all_rooms(request: Request):
+async def list_all_rooms(req: Request):
     """Route: list all rooms"""
     rooms = get_all_records(get_room, col_rooms.find())
-    ctx = {"request": request, "rooms": rooms}
+    ctx = {"request": req, "rooms": rooms}
     return templates.TemplateResponse("room-list.html", ctx)
 
 
 @router.get("/tenants/list", response_class=HTMLResponse)
-async def list_all_tenants(request: Request):
+async def list_all_tenants(req: Request):
     """Route: show all tenants"""
     data = get_all_records(get_tenant, col_tenants.find())
-    ctx = {"request": request, "data": data}
+    ctx = {"request": req, "data": data}
     return templates.TemplateResponse("tenant-list.html", ctx)
 
 
@@ -327,25 +328,25 @@ async def add_tenant(new_tenant: Tenant):
 
 
 @router.get("/add/income", response_class=HTMLResponse)
-async def render_add_income(request: Request):
+async def render_add_income(req: Request):
     """Route: render the form to add an income"""
     dt_now = datetime.now()
     d_now = dt_now.date()
-    income = Income(id=0, description="", amount=0, for_tenant="LKPHUNG",
+    income = Income(description="", amount=0, for_tenant="LKPHUNG",
                     category=IncomeEnum.STANDING_ORDER, arrived_date=d_now,
                     from_date=d_now, to_date=d_now)
-    categories = income_categories()
+    _categories = income_categories()
     ctx_dict = {
-        "request": request,
+        "request": req,
         "income": income,
         "action": "add",
-        "categories": categories
+        "categories": _categories
     }
     return templates.TemplateResponse("income-add.html", ctx_dict)
 
 
 @router.get("/add/rent", response_class=HTMLResponse)
-async def render_add_rent(request: Request):
+async def render_add_rent(req: Request):
     """Route: render the form to add a rent"""
     year = datetime.now().year
     month = datetime.now().month
@@ -357,32 +358,32 @@ async def render_add_rent(request: Request):
     rent.week_commence = rent.week_commence.strftime("%d/%m/%Y")
     tenants = get_all_records(get_tenant, col_tenants.find())
     return templates.TemplateResponse("rent-add.html",
-        {"request": request, "rent": rent, "action": "add", "tenants": tenants})
+                                      {"request": req, "rent": rent, "action": "add", "tenants": tenants})
 
 
 @router.get("/add/room", response_class=HTMLResponse)
-async def render_add_room(request: Request):
+async def render_add_room(req: Request):
     """Route: render the form to add a room"""
     room = Room(id="", name="room", description="", area="")
     ctx = {
-        "request": request,
+        "request": req,
         "room": room,
         "action": "add"
     }
     return templates.TemplateResponse("room-add.html", ctx)
 
 @router.get("/add/tenant", response_class=HTMLResponse)
-async def render_add_tenant(request: Request):
+async def render_add_tenant(req: Request):
     """Route: render the form to add a tenant"""
     dt_now = datetime.now()
     dob = dt_now.date()
     tenant = Tenant(id="", name="", dob=dob, gender="male", room="", hb=True,
                     notes="", creation=0, modification=0)
-    ctx_dict = {"request": request, "name": "Tung", "tenant": tenant, "action": "add"}
+    ctx_dict = {"request": req, "name": "Tung", "tenant": tenant, "action": "add"}
     return templates.TemplateResponse("tenant-add.html", ctx_dict)
 
 @router.get("/", response_class=HTMLResponse)
-async def root(request: Request):
+async def root(req: Request):
     d1 = datetime.strptime("2025-04-21", '%Y-%m-%d') # date is 12 jul 2021
     d2 = datetime.strptime("2025-05-18", '%Y-%m-%d') # date is 20th jun 2022
     diff = d2 - d1
@@ -390,7 +391,7 @@ async def root(request: Request):
     data = f'days : {diff.days + 1} - weeks : {(diff.days + 1)//7} - w: {weeks}'
     s, e = start_end_week("2025-02-28")
     data += f"s: {s}, e: {e}"
-    ctx = {"request": request, "name": "Tung", "data": data}
+    ctx = {"request": req, "name": "Tung", "data": data}
     return templates.TemplateResponse("index.html", ctx)
 
 app.include_router(router)
