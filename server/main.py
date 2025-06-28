@@ -15,7 +15,7 @@ from database.schemas import get_all_records, get_income, get_rent, get_room, \
     get_task, \
     get_tenant
 from database.models import Income, IncomeEnum, Rent, Room, Tenant, Todo
-from utils.utilities import income_categories, weeks_between
+from utils.utilities import income_categories, start_end_week, weeks_between
 
 app = FastAPI()
 router = APIRouter()
@@ -362,12 +362,13 @@ async def render_add_tenant(request: Request):
 
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-
     d1 = datetime.strptime("2025-04-21", '%Y-%m-%d') # date is 12 jul 2021
     d2 = datetime.strptime("2025-05-18", '%Y-%m-%d') # date is 20th jun 2022
     diff = d2 - d1
     weeks = weeks_between(d1, d2)
     data = f'days : {diff.days + 1} - weeks : {(diff.days + 1)//7} - w: {weeks}'
+    s, e = start_end_week("2025-02-28")
+    data += f"s: {s}, e: {e}"
     ctx = {"request": request, "name": "Tung", "data": data}
     return templates.TemplateResponse("index.html", ctx)
 
