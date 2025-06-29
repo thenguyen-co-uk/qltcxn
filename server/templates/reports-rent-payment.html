@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Income Report | ALH</title>
+    <title>Rents and Payments Report | ALH</title>
     {% include('_head.html') %}
 </head>
 <body>
@@ -12,7 +12,7 @@
 <div class="grid-container">
     <div class="grid-x grid-padding-x">
         <div class="small-12 large-12 cell">
-            <h3>Reports for the incomes</h3>
+            <h3>Reports for the rents and payments</h3>
         </div>
     </div>
 </div>
@@ -46,7 +46,7 @@
         </div>
         <div class="cell small-12 medium-4 large-4">&nbsp;</div>
     </div>
-</div>
+</div><hr/>
 </form>
 
 {#<form>
@@ -67,8 +67,10 @@
 </form>#}
 
 <div class="grid-container">
-    <div class="results">
+    <div class="results grid-x grid-padding-x">
+        <div class="columns small-12 medium-12 large-12">
         {% include '_reports-rent-payment.html' %}
+        </div>
     </div>
 </div>
 {% include '_foot.html' %}

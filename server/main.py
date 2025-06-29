@@ -197,7 +197,7 @@ def filter_incomes_by_dates(incomes, from_date, to_date):
     while start <= end_date_of_to:
         weeks_included.append(start)
         start += timedelta(days=7)
-    print(weeks_included)
+    # print(weeks_included)
     filtered_incomes = []
     for income in incomes:
         ic_from_date = income["from_date"].date()
@@ -211,12 +211,12 @@ def filter_incomes_by_dates(incomes, from_date, to_date):
             while start <= ic_to_date:
                 weeks.append(start)
                 start += timedelta(days=7)
-            print(weeks)
+            # print(weeks)
             t = 0
             for week in weeks:
                 if week in weeks_included:
                     t += 1
-            print(t)
+            # print(t)
             amount = income["amount"]/len(weeks)*t
             income["amount"] = amount
             filtered_incomes.append(income)
