@@ -64,11 +64,14 @@ class Room(BaseModel):
 
 class IncomeEnum(str, Enum):
     """
-    This class is used to define the income type
+    This class is used to define the income types
     """
     STANDING_ORDER = 'Standing Order'
     HOUSING_BENEFIT = 'Housing Benefit'
     REFUND = 'Refund'
+    DONATION = 'Donation'
+    FUNDING = 'Funding'
+    INTEREST = 'Interest'
 
 
 class Income(BaseModel):
