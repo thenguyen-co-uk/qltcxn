@@ -1,3 +1,35 @@
+{% if rents %}
+    <table class="stack">
+    <tr>
+        <th>Week Commence</th>
+        <th>Rent Due</th>
+        <th>Services</th>
+        <th>Utilities</th>
+        <th>Meals</th>
+        <th>Extra</th>
+        <th>Total</th>
+    </tr>
+{% for rent in rents %}
+    <tr>
+        <td>{{ rent["week_commence"].strftime("%d/%m/%Y") }}</td>
+        <td>{{ rent["rent_due"] }}</td>
+        <td>{{ rent["services"] }}</td>
+        <td>{{ rent["utilities"] }}</td>
+        <td>{{ rent["meals"] }}</td>
+        <td>{{ rent["extra"] }}</td>
+        <td>{{ "{:,.2f}".format(rent["rent_due"]+rent["services"]+rent["utilities"]+rent["meals"]+rent["extra"]) }}</td>
+    </tr>
+{% endfor %}
+    <tr style="font-weight: bold">
+        <td>Total</td>
+        <td>{{ "{:,.2f}".format(total_rents["rent_due"]) }}</td>
+        <td>{{ "{:,.2f}".format(total_rents["services"]) }}</td>
+        <td>{{ "{:,.2f}".format(total_rents["utilities"]) }}</td>
+        <td>{{ "{:,.2f}".format(total_rents["meals"]) }}</td>
+        <td>{{ "{:,.2f}".format(total_rents["extra"]) }}</td>
+        <td>{{ "{:,.2f}".format(total_rents["total"]) }}</td>
+    </tr>
+{% endif %}
 {% if incomes %}
     <h3 style="color: green">Filtered results</h3>
     <table class="stack">

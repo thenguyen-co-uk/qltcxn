@@ -156,6 +156,7 @@ async def reports_rent_payment(req: Request):
 
 
 def calculate_total_groups(groups):
+    """Function: calculate total groups"""
     result = {}
     for k, v in groups.items():
         total = 0
@@ -165,7 +166,30 @@ def calculate_total_groups(groups):
     return result
 
 
-def filter_by_dates(incomes, from_date, to_date):
+def calculate_total_rents(rents):
+    """Function: render the reports page for the incomes"""
+    result = {
+        "rent_due": 0,
+        "services": 0,
+        "utilities": 0,
+        "meals": 0,
+        "extra": 0,
+        "total": 0
+    }
+    for rent in rents:
+        result["rent_due"] += rent["rent_due"]
+        result["services"] += rent["services"]
+        result["utilities"] += rent["utilities"]
+        result["meals"] += rent["meals"]
+        result["extra"] += rent["extra"]
+        result["total"] += rent["rent_due"]+rent["services"]
+        result["total"] += rent["utilities"]+rent["meals"]+rent["extra"]
+
+    return result
+
+
+def filter_incomes_by_dates(incomes, from_date, to_date):
+    """Function: filter incomes by dates"""
     begin_date_of_from, end_date_of_from = start_end_week(from_date)
     begin_date_of_to, end_date_of_to = start_end_week(to_date)
     filtered_incomes = []
@@ -176,13 +200,28 @@ def filter_by_dates(incomes, from_date, to_date):
     return filtered_incomes
 
 
+
+def filter_rents_by_dates(rents, from_date, to_date):
+    """ Filter the rents by tenants. """
+    begin_date_of_from, end_date_of_from = start_end_week(from_date)
+    begin_date_of_to, end_date_of_to = start_end_week(to_date)
+    filtered_rents = []
+    for rent in rents:
+        if begin_date_of_from <= rent["week_commence"].date() <= end_date_of_to:
+            filtered_rents.append(rent)
+    return filtered_rents
+
+
 @router.post("/reports/rent-payment/search", response_class=HTMLResponse)
 async def reports_rent_payment_search(item: RentPaymentSearch, req: Request):
     """Route: search or filter for the incomes"""
     tenant = col_tenants.find_one({"_id": ObjectId(item.tenant)})
+    rents = col_rents.find({"tenant_id": tenant["id"]})
+    rents = filter_rents_by_dates(rents, item.from_date, item.to_date)
+    total_rents = calculate_total_rents(rents)
     cursor = col_incomes.find({"for_tenant": tenant["id"]})
     incomes = list(cursor)
-    incomes = filter_by_dates(incomes, item.from_date, item.to_date)
+    incomes = filter_incomes_by_dates(incomes, item.from_date, item.to_date)
     groups = None
     total_groups = None
     if item.show_subtotal:
@@ -198,7 +237,9 @@ async def reports_rent_payment_search(item: RentPaymentSearch, req: Request):
         "total_amount": total_amount,
         "show_subtotal": item.show_subtotal,
         "groups": groups,
-        "total_groups": total_groups
+        "total_groups": total_groups,
+        "rents": rents,
+        "total_rents": total_rents
     }
     return templates.TemplateResponse("_reports-rent-payment.html", ctx)
 
