@@ -41,12 +41,12 @@
             <td>{{ income["to_date"].strftime("%d/%m/%Y") }}</td>
         </tr>
     {% endfor %}
+    {% endif %}
     <tr>
-        <td>Total</td>
-        <td style="text-align: right">{{ total_amount}}</td>
+        <td style="font-style: italic">Total for all categories</td>
+        <td style="text-align: right; font-weight: bold">{{ "{:,.2f}".format(total_amount) }}</td>
         <td colspan="3">&nbsp;...</td>
     </tr>
-    {% endif %}
     </table>
 {% else %}
 <div class="row">
