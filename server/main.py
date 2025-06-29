@@ -165,12 +165,24 @@ def calculate_total_groups(groups):
     return result
 
 
+def filter_by_dates(incomes, from_date, to_date):
+    begin_date_of_from, end_date_of_from = start_end_week(from_date)
+    begin_date_of_to, end_date_of_to = start_end_week(to_date)
+    filtered_incomes = []
+    for income in incomes:
+        if (income["from_date"].date() >= begin_date_of_from
+                and income["to_date"].date() <= end_date_of_to):
+            filtered_incomes.append(income)
+    return filtered_incomes
+
+
 @router.post("/reports/rent-payment/search", response_class=HTMLResponse)
 async def reports_rent_payment_search(item: RentPaymentSearch, req: Request):
     """Route: search or filter for the incomes"""
     tenant = col_tenants.find_one({"_id": ObjectId(item.tenant)})
     cursor = col_incomes.find({"for_tenant": tenant["id"]})
     incomes = list(cursor)
+    incomes = filter_by_dates(incomes, item.from_date, item.to_date)
     groups = None
     total_groups = None
     if item.show_subtotal:

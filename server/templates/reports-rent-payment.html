@@ -76,6 +76,8 @@
     const tenantSelector = $('#tenant');
     const btnSearchSelector = $('#btn-search');
     const chkSubtotalCategory = $('#chk-subtotal-category');
+    const fromDateSelector = $('#from-date');
+    const toDateSelector = $('#to-date');
 
     $(document).ready( function () {
         initTenantDropdownBox();
@@ -98,7 +100,9 @@
         const URL = "/reports/rent-payment/search"
         const data = {
             "show_subtotal": subTotal,
-            "tenant": tenantSelector.val()
+            "tenant": tenantSelector.val(),
+            'from_date': fromDateSelector.val(),
+            'to_date': toDateSelector.val()
         }
         fetch(URL, {
             method: 'POST',
