@@ -17,7 +17,7 @@
         <td>{{ rent["services"] }}</td>
         <td>{{ rent["utilities"] }}</td>
         <td>{{ rent["meals"] }}</td>
-        <td>{{ rent["extra"] }}</td>
+        <td>{{ "{:,.2f}".format(rent["extra"]) }}</td>
         <td>{{ "{:,.2f}".format(rent["rent_due"]+rent["services"]+rent["utilities"]+rent["meals"]+rent["extra"]) }}</td>
     </tr>
 {% endfor %}
