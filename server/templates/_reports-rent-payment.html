@@ -11,7 +11,7 @@
         <th>Total</th>
     </tr>
 {% for rent in rents %}
-    <tr>
+    <tr style="text-align: right">
         <td>{{ rent["week_commence"].strftime("%d/%m/%Y") }}</td>
         <td>{{ rent["rent_due"] }}</td>
         <td>{{ rent["services"] }}</td>
@@ -21,7 +21,7 @@
         <td>{{ "{:,.2f}".format(rent["rent_due"]+rent["services"]+rent["utilities"]+rent["meals"]+rent["extra"]) }}</td>
     </tr>
 {% endfor %}
-    <tr style="font-weight: bold">
+    <tr style="font-weight: bold; text-align: right">
         <td>Total</td>
         <td>{{ "{:,.2f}".format(total_rents["rent_due"]) }}</td>
         <td>{{ "{:,.2f}".format(total_rents["services"]) }}</td>
