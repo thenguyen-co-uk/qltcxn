@@ -19,22 +19,21 @@
 <form id="search-form">
 <div class="grid-container">
     <div class="grid-x grid-padding-x">
-        <div class="cell large-4">
+        <div class="cell large-3">
                 <label for="tenant">Tenant</label>
-                <select id="tenant">
-                    <option value="phung">Phung</option>
-                    <option value="acam">Acam</option>
-                    <option value="lau">Lau</option>
-                </select>
+                <select id="tenant"></select>
         </div>
-        <div class="cell large-4">
+        <div class="cell large-3">
             <label for="from-date">From Week/Date</label>
             <input type="date" id="from-date">
+        </div>
+        <div class="cell large-3">
             <label for="to-date">To Week/Date</label>
             <input type="date" id="to-date">
         </div>
-        <div class="cell large-4">
-            <input type="button" class="button" value="Search">
+        <div class="cell large-3">
+            <label for="btn-search">&nbsp;</label>
+            <input type="button" class="button" id="btn-search" value="Search">
         </div>
     </div>
     {#<div class="row">
@@ -63,18 +62,51 @@
 </form>#}
 
 <div class="grid-container">
-    <div class="row">
-        <div class="columns small-12 medium-12 large-12">
-            Hien thi ket qua o day
-        </div>
+    <div class="results">
+        {% include '_reports-rent-payment.html' %}
     </div>
 </div>
 {% include '_foot.html' %}
 <script>
-    $(document).ready( function () {
-        //$('#myTable').DataTable();
+    const tenantSelector = $('#tenant');
+    const btnSearchSelector = $('#btn-search');
 
-    } );
+    $(document).ready( function () {
+        initTenantDropdownBox();
+    });
+
+    function initTenantDropdownBox() {
+        {% for tenant in tenants %}
+            tenantSelector.append(new Option("{{ tenant['name'] }}", "{{ tenant['_id'] }}"));
+        {% endfor %}
+    }
+
+    btnSearchSelector.on("click", function () {
+        const URL = "/reports/rent-payment/search"
+        const data = {
+            "tenant": tenantSelector.val()
+        }
+        fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed!!!');
+            }
+            return response.text();
+        }).then(data => {
+            $('.results').html(data);
+            //console.log(data["message"]);
+            //toastr.success(data["message"]);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+
+    });
 </script>
 </body>
 </html>

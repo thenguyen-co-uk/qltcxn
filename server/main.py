@@ -14,7 +14,7 @@ from config import db
 from database.schemas import get_all_records, get_income, get_rent, get_room, \
     get_task, \
     get_tenant
-from database.models import Income, IncomeEnum, Rent, Room, Tenant, Todo
+from database.models import Income, IncomeEnum, RentPaymentItem, Rent, Room, Tenant, Todo
 from utils.utilities import income_categories, start_end_week, weeks_between
 
 app = FastAPI()
@@ -147,8 +147,27 @@ async def reports(req: Request):
 @router.get("/reports/rent-payment", response_class=HTMLResponse)
 async def reports_rent_payment(req: Request):
     """Route: render the reports page for the incomes"""
-    ctx = {"request": req}
+    tenants = get_all_records(get_tenant, col_tenants.find())
+
+    ctx = {"request": req, "tenants": tenants}
     return templates.TemplateResponse("reports-rent-payment.html", ctx)
+
+
+@router.post("/reports/rent-payment/search", response_class=HTMLResponse)
+async def reports_rent_payment_search(item: RentPaymentItem, req: Request):
+    """Route: search or filter for the incomes"""
+    tenant = col_tenants.find_one({"_id": ObjectId(item.tenant)})
+    incomes = col_incomes.find({"for_tenant": tenant["id"] })
+    # message = f"Results: {len(list(incomes))} incomes found for tenant"
+    # message += f" {tenant['id']}"
+    message = "Results are being processed."
+    ctx = {
+        "request": req,
+        "message": message,
+        "tenant_id": item.tenant,
+        "incomes": incomes,
+    }
+    return templates.TemplateResponse("_reports-rent-payment.html", ctx)
 
 
 @router.put("/income/update/{income_object_id}")

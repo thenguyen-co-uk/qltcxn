@@ -1,0 +1,16 @@
+{% if incomes %}
+    <h3 style="color: green">Filtered results</h3>
+    {% for income in incomes %}
+    <div class="row">
+        <div class="columns small-12 medium-12 large-12">
+            <p>{{ income }}</p>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<div class="row">
+    <div class="columns small-12 medium-12 large-12">
+        <h4>Come here</h4>
+    </div>
+</div>
+{% endif %}

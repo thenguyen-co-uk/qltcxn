@@ -86,3 +86,10 @@ class Income(BaseModel):
     # if the category is Housing Benefit, from_date and to_date are required
     from_date: Optional[date] = None
     to_date: Optional[date] = None
+
+
+class RentPaymentItem(BaseModel):
+    tenant: str
+    # description: str | None = None
+    # price: float
+    # tax: float | None = None
