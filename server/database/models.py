@@ -88,8 +88,9 @@ class Income(BaseModel):
     to_date: Optional[date] = None
 
 
-class RentPaymentItem(BaseModel):
+class RentPaymentSearch(BaseModel):
     tenant: str
+    show_subtotal: bool = False
     # description: str | None = None
     # price: float
     # tax: float | None = None

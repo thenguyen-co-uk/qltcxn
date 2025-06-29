@@ -11,9 +11,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from config import db
-from database.models import Income, IncomeEnum, Rent, RentPaymentItem, Room, \
+from database.models import Income, IncomeEnum, Rent, RentPaymentSearch, Room, \
     Tenant, Todo
-from database.schemas import get_all_records, get_income, get_rent, get_room, \
+from database.schemas import calculate_subtotal_incomes, get_all_records, \
+    get_income, get_rent, get_room, \
     get_task, \
     get_tenant
 from utils.utilities import income_categories, start_end_week, weeks_between
@@ -154,12 +155,27 @@ async def reports_rent_payment(req: Request):
     return templates.TemplateResponse("reports-rent-payment.html", ctx)
 
 
+def calculate_total_groups(groups):
+    result = {}
+    for k, v in groups.items():
+        total = 0
+        for income in v:
+            total += income["amount"]
+        result[k] = "{:,.2f}".format(total)
+    return result
+
+
 @router.post("/reports/rent-payment/search", response_class=HTMLResponse)
-async def reports_rent_payment_search(item: RentPaymentItem, req: Request):
+async def reports_rent_payment_search(item: RentPaymentSearch, req: Request):
     """Route: search or filter for the incomes"""
     tenant = col_tenants.find_one({"_id": ObjectId(item.tenant)})
     cursor = col_incomes.find({"for_tenant": tenant["id"]})
     incomes = list(cursor)
+    groups = None
+    total_groups = None
+    if item.show_subtotal:
+        groups = calculate_subtotal_incomes(incomes)
+        total_groups = calculate_total_groups(groups)
     message = "The results are being processed..."
     total_amount = sum([income["amount"] for income in incomes])
     ctx = {
@@ -167,7 +183,10 @@ async def reports_rent_payment_search(item: RentPaymentItem, req: Request):
         "message": message,
         "tenant_id": item.tenant,
         "incomes": incomes,
-        "total_amount": total_amount
+        "total_amount": total_amount,
+        "show_subtotal": item.show_subtotal,
+        "groups": groups,
+        "total_groups": total_groups
     }
     return templates.TemplateResponse("_reports-rent-payment.html", ctx)
 

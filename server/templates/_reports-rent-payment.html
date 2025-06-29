@@ -8,6 +8,25 @@
         <th>From Date</th>
         <th>To Date</th>
     </tr>
+    {% if show_subtotal %}
+    {% for k, v in groups.items() %}
+        {% for income in v %}
+            <tr>
+                <td>{{ income["category"] }}</td>
+                <td style="text-align: right">{{ "{:,.2f}".format(income["amount"]) }}</td>
+                <td>{{ income["arrived_date"].strftime("%d/%m/%Y") }}</td>
+                <td>{{ income["from_date"].strftime("%d/%m/%Y") }}</td>
+                <td>{{ income["to_date"].strftime("%d/%m/%Y") }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td><span style="font-style: italic">Total for </span>
+                <strong>{{ k }}</strong></td>
+            <td style="text-align: right; font-weight: bold">{{ total_groups[k] }}</td>
+            <td colspan="3">&nbsp;...</td>
+        </tr>
+    {% endfor %}
+    {% else %}
     {% for income in incomes %}
 {#    <div class="row">
         <div class="columns small-12 medium-12 large-12">
@@ -27,6 +46,7 @@
         <td style="text-align: right">{{ total_amount}}</td>
         <td colspan="3">&nbsp;...</td>
     </tr>
+    {% endif %}
     </table>
 {% else %}
 <div class="row">

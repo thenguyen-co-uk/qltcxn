@@ -36,11 +36,16 @@
             <input type="button" class="button" id="btn-search" value="Search">
         </div>
     </div>
-    {#<div class="row">
-        <div class="columns small-2 large-4">1</div>
-        <div class="columns small-4 large-4">2</div>
-        <div class="columns small-6 large-4">3</div>
-    </div>#}
+    <div class="grid-x grid-padding-x">
+        <div class="cell small-12 medium-4 large-4">
+            Rendering results options</div>
+        <div class="cell small-12 medium-4 large-4">
+            <label for="chk-subtotal-category">
+                <input type="checkbox" id="chk-subtotal-category">Sub total for Category
+            </label>
+        </div>
+        <div class="cell small-12 medium-4 large-4">&nbsp;</div>
+    </div>
 </div>
 </form>
 
@@ -70,6 +75,7 @@
 <script>
     const tenantSelector = $('#tenant');
     const btnSearchSelector = $('#btn-search');
+    const chkSubtotalCategory = $('#chk-subtotal-category');
 
     $(document).ready( function () {
         initTenantDropdownBox();
@@ -88,8 +94,10 @@
             toastr.warning("Please choose a valid tenant!!!");
             return false;
         }
+        const subTotal = chkSubtotalCategory.is(':checked');
         const URL = "/reports/rent-payment/search"
         const data = {
+            "show_subtotal": subTotal,
             "tenant": tenantSelector.val()
         }
         fetch(URL, {

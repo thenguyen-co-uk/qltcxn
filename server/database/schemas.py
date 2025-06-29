@@ -1,6 +1,8 @@
 """
 This script defines all operations.
 """
+import collections
+from collections import defaultdict
 from datetime import datetime
 
 from database.models import Income, Rent, Room, Tenant
@@ -53,7 +55,7 @@ def get_rent(rent: Rent):
         total_balance += rent["meals"]
     if "notes" in rent:
         data["notes"] = rent["notes"]
-    data["total_balance"] = "{:.2f}".format(total_balance)
+    data["total_balance"] = "{:,.2f}".format(total_balance)
     return data
 
 
@@ -88,3 +90,16 @@ def get_income(income: Income):
 def get_all_records(get_record_function, all_records):
     """ Returns all records """
     return [get_record_function(record) for record in all_records]
+
+
+def calculate_subtotal_incomes(incomes):
+    """ Calculates the subtotal for given incomes """
+    result = {}
+    for income in incomes:
+        if income["category"] not in result:
+            result[income["category"]] = [income]
+        else:
+            cate = result[income["category"]]
+            cate.append(income)
+    od = collections.OrderedDict(sorted(result.items()))
+    return od
