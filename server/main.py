@@ -205,7 +205,9 @@ def filter_incomes_by_dates(incomes, from_date, to_date):
         if ic_from_date >= begin_date_of_from and ic_to_date <= end_date_of_to:
             filtered_incomes.append(income)
         elif (ic_from_date.month != ic_to_date.month
-              and income["category"] == IncomeEnum.HOUSING_BENEFIT.value):
+            and income["category"] == IncomeEnum.HOUSING_BENEFIT.value
+            and ((begin_date_of_from <= ic_to_date <= end_date_of_to)
+                 or (begin_date_of_from <= ic_from_date <= end_date_of_to))):
             start = ic_from_date
             weeks = []
             while start <= ic_to_date:
