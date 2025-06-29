@@ -32,21 +32,9 @@ def start_end_week(given_date):
 
 def income_categories():
     """
-    Returns a list of Income categories.
+    Returns a list of Income categories/types.
     """
-    categories = [
-        {
-            "name": IncomeEnum.STANDING_ORDER.value,
-            "id": IncomeEnum.STANDING_ORDER
-        },
-        {
-            "name": IncomeEnum.HOUSING_BENEFIT.value,
-            "id": IncomeEnum.HOUSING_BENEFIT
-        },
-        {
-            "name": IncomeEnum.REFUND.value,
-            "id": IncomeEnum.REFUND
-        }
-    ]
-
+    categories = []
+    for k, v in IncomeEnum.__members__.items():
+        categories.append({"name": v.value, "id": k})
     return categories
