@@ -1,16 +1,37 @@
 {% if incomes %}
     <h3 style="color: green">Filtered results</h3>
+    <table class="stack">
+    <tr>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Arrived Date</th>
+        <th>From Date</th>
+        <th>To Date</th>
+    </tr>
     {% for income in incomes %}
-    <div class="row">
+{#    <div class="row">
         <div class="columns small-12 medium-12 large-12">
             <p>{{ income }}</p>
         </div>
-    </div>
+    </div>#}
+        <tr>
+            <td>{{ income["category"] }}</td>
+            <td style="text-align: right">{{ income["amount"] }}</td>
+            <td>{{ income["arrived_date"].strftime("%d/%m/%Y") }}</td>
+            <td>{{ income["from_date"].strftime("%d/%m/%Y") }}</td>
+            <td>{{ income["to_date"].strftime("%d/%m/%Y") }}</td>
+        </tr>
     {% endfor %}
+    <tr>
+        <td>Total</td>
+        <td style="text-align: right">{{ total_amount}}</td>
+        <td colspan="3">&nbsp;...</td>
+    </tr>
+    </table>
 {% else %}
 <div class="row">
     <div class="columns small-12 medium-12 large-12">
-        <h4>Come here</h4>
+        <h4>No record found!!!</h4>
     </div>
 </div>
 {% endif %}

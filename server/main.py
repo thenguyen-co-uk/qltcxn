@@ -1,20 +1,21 @@
 """
 The main app is defined in this file.
 """
-from datetime import datetime, date
+from datetime import date, datetime
 from pathlib import Path
-from urllib import request
 
 from bson import ObjectId
-from fastapi import FastAPI, APIRouter, HTTPException, Request
+from fastapi import APIRouter, FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
 from config import db
+from database.models import Income, IncomeEnum, Rent, RentPaymentItem, Room, \
+    Tenant, Todo
 from database.schemas import get_all_records, get_income, get_rent, get_room, \
     get_task, \
     get_tenant
-from database.models import Income, IncomeEnum, RentPaymentItem, Rent, Room, Tenant, Todo
 from utils.utilities import income_categories, start_end_week, weeks_between
 
 app = FastAPI()
@@ -157,15 +158,16 @@ async def reports_rent_payment(req: Request):
 async def reports_rent_payment_search(item: RentPaymentItem, req: Request):
     """Route: search or filter for the incomes"""
     tenant = col_tenants.find_one({"_id": ObjectId(item.tenant)})
-    incomes = col_incomes.find({"for_tenant": tenant["id"] })
-    # message = f"Results: {len(list(incomes))} incomes found for tenant"
-    # message += f" {tenant['id']}"
-    message = "Results are being processed."
+    cursor = col_incomes.find({"for_tenant": tenant["id"]})
+    incomes = list(cursor)
+    message = "The results are being processed..."
+    total_amount = sum([income["amount"] for income in incomes])
     ctx = {
         "request": req,
         "message": message,
         "tenant_id": item.tenant,
         "incomes": incomes,
+        "total_amount": total_amount
     }
     return templates.TemplateResponse("_reports-rent-payment.html", ctx)
 

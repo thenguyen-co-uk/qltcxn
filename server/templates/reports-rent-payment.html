@@ -79,9 +79,15 @@
         {% for tenant in tenants %}
             tenantSelector.append(new Option("{{ tenant['name'] }}", "{{ tenant['_id'] }}"));
         {% endfor %}
+        tenantSelector.append(new Option("Choose a tenant", "Choose a tenant"));
+        tenantSelector.val("Choose a tenant");
     }
 
     btnSearchSelector.on("click", function () {
+        if ("Choose a tenant" === tenantSelector.val()) {
+            toastr.warning("Please choose a valid tenant!!!");
+            return false;
+        }
         const URL = "/reports/rent-payment/search"
         const data = {
             "tenant": tenantSelector.val()
