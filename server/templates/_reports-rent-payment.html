@@ -67,7 +67,7 @@
     </div>#}
         <tr>
             <td>{{ income["category"] }}</td>
-            <td style="text-align: right">{{ income["amount"] }}</td>
+            <td style="text-align: right">{{ "{:,.2f}".format(income["amount"]) }}</td>
             <td>{{ income["arrived_date"].strftime("%d/%m/%Y") }}</td>
             <td>{{ income["from_date"].strftime("%d/%m/%Y") }}</td>
             <td>{{ income["to_date"].strftime("%d/%m/%Y") }}</td>

@@ -1,7 +1,7 @@
 """
 The main app is defined in this file.
 """
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from bson import ObjectId
@@ -192,13 +192,35 @@ def filter_incomes_by_dates(incomes, from_date, to_date):
     """Function: filter incomes by dates"""
     begin_date_of_from, end_date_of_from = start_end_week(from_date)
     begin_date_of_to, end_date_of_to = start_end_week(to_date)
+    start = begin_date_of_from
+    weeks_included = []
+    while start <= end_date_of_to:
+        weeks_included.append(start)
+        start += timedelta(days=7)
+    print(weeks_included)
     filtered_incomes = []
     for income in incomes:
-        if (income["from_date"].date() >= begin_date_of_from
-                and income["to_date"].date() <= end_date_of_to):
+        ic_from_date = income["from_date"].date()
+        ic_to_date = income["to_date"].date()
+        if ic_from_date >= begin_date_of_from and ic_to_date <= end_date_of_to:
+            filtered_incomes.append(income)
+        elif (ic_from_date.month != ic_to_date.month
+              and income["category"] == IncomeEnum.HOUSING_BENEFIT.value):
+            start = ic_from_date
+            weeks = []
+            while start <= ic_to_date:
+                weeks.append(start)
+                start += timedelta(days=7)
+            print(weeks)
+            t = 0
+            for week in weeks:
+                if week in weeks_included:
+                    t += 1
+            print(t)
+            amount = income["amount"]/len(weeks)*t
+            income["amount"] = amount
             filtered_incomes.append(income)
     return filtered_incomes
-
 
 
 def filter_rents_by_dates(rents, from_date, to_date):
@@ -478,8 +500,8 @@ async def render_add_tenant(req: Request):
 
 @router.get("/", response_class=HTMLResponse)
 async def root(req: Request):
-    d1 = datetime.strptime("2025-04-21", '%Y-%m-%d')
-    d2 = datetime.strptime("2025-05-18", '%Y-%m-%d')
+    d1 = datetime.strptime("2025-05-19", '%Y-%m-%d')
+    d2 = datetime.strptime("2025-06-15", '%Y-%m-%d')
     diff = d2 - d1
     weeks = weeks_between(d1, d2)
     data = f'days : {diff.days + 1} - weeks : {(diff.days + 1)//7} - w: {weeks}'
