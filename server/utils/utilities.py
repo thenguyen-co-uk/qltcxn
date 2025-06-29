@@ -17,10 +17,12 @@ def weeks_between(start_date, end_date):
 def start_end_week(given_date):
     """
     Calculates the start and end date of the week by given_date.
-    given_date: 2025-06-28
+    given_date: 2025-06-28 or a datetime.date object
     """
     if not given_date or given_date is None:
         today = date.today()
+    elif isinstance(given_date, date):
+        today = given_date
     else:
         today = datetime.strptime(given_date, '%Y-%m-%d').date()
     start = today - timedelta(days=today.weekday())
