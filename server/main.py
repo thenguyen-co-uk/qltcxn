@@ -297,7 +297,6 @@ async def add_income(new_income: Income):
     """Route: add an income"""
     try:
         d = dict(new_income)
-        # new_income["category"] = IncomeEnum.STANDING_ORDER
         df = '%Y-%m-%d'
         d["arrived_date"] = datetime.strptime(str(d["arrived_date"]), df)
         d["from_date"] = datetime.strptime(str(d["from_date"]), df)
@@ -353,17 +352,17 @@ async def render_add_income(req: Request):
     """Route: render the form to add an income"""
     dt_now = datetime.now()
     d_now = dt_now.date()
-    income = Income(description="", amount=0, for_tenant="LKPHUNG",
+    income = Income(description="", amount=0, for_tenant="TENANT_ID",
                     category=IncomeEnum.STANDING_ORDER, arrived_date=d_now,
                     from_date=d_now, to_date=d_now)
     _categories = income_categories()
-    ctx_dict = {
+    ctx = {
         "request": req,
         "income": income,
         "action": "add",
         "categories": _categories
     }
-    return templates.TemplateResponse("income-add.html", ctx_dict)
+    return templates.TemplateResponse("income-add.html", ctx)
 
 
 @router.get("/add/rent", response_class=HTMLResponse)
@@ -378,8 +377,10 @@ async def render_add_rent(req: Request):
                 extra=0.0, notes="")
     rent.week_commence = rent.week_commence.strftime("%d/%m/%Y")
     tenants = get_all_records(get_tenant, col_tenants.find())
-    return templates.TemplateResponse("rent-add.html",
-                                      {"request": req, "rent": rent, "action": "add", "tenants": tenants})
+    ctx = {
+        "request": req, "rent": rent, "action": "add", "tenants": tenants
+    }
+    return templates.TemplateResponse("rent-add.html", ctx)
 
 
 @router.get("/add/room", response_class=HTMLResponse)
@@ -387,9 +388,7 @@ async def render_add_room(req: Request):
     """Route: render the form to add a room"""
     room = Room(id="", name="room", description="", area="")
     ctx = {
-        "request": req,
-        "room": room,
-        "action": "add"
+        "request": req, "room": room, "action": "add"
     }
     return templates.TemplateResponse("room-add.html", ctx)
 
@@ -400,13 +399,15 @@ async def render_add_tenant(req: Request):
     dob = dt_now.date()
     tenant = Tenant(id="", name="", dob=dob, gender="male", room="", hb=True,
                     notes="", creation=0, modification=0)
-    ctx_dict = {"request": req, "name": "Tung", "tenant": tenant, "action": "add"}
+    ctx_dict = {
+        "request": req, "name": "Tung", "tenant": tenant, "action": "add"
+    }
     return templates.TemplateResponse("tenant-add.html", ctx_dict)
 
 @router.get("/", response_class=HTMLResponse)
 async def root(req: Request):
-    d1 = datetime.strptime("2025-04-21", '%Y-%m-%d') # date is 12 jul 2021
-    d2 = datetime.strptime("2025-05-18", '%Y-%m-%d') # date is 20th jun 2022
+    d1 = datetime.strptime("2025-04-21", '%Y-%m-%d')
+    d2 = datetime.strptime("2025-05-18", '%Y-%m-%d')
     diff = d2 - d1
     weeks = weeks_between(d1, d2)
     data = f'days : {diff.days + 1} - weeks : {(diff.days + 1)//7} - w: {weeks}'
