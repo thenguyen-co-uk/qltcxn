@@ -17,10 +17,12 @@
             <select name="categories" id="category" disabled></select>
             <label for="arrived_date">Arrived Date</label>
             <input type="date" id="arrived_date" value="{{ income['arrived_date'] }}" readonly>
+            <div class="optional-dates">
             <label for="from_date">From Date</label>
             <input type="date" id="from_date" value="{{ income['from_date'] }}" readonly>
             <label for="to_date">To Date</label>
             <input type="date" id="to_date" value="{{ income['to_date'] }}" readonly>
+            </div>
         </div>
     </div>
     <label for="btn-action"></label>

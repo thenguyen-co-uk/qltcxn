@@ -96,6 +96,15 @@
         });
     }
 
+    incomeCategory.on("change", function () {
+        const selector = $('.optional-dates');
+        if (["Housing Benefit", "Standing Order"].includes($(this).val())) {
+            selector.show();
+        } else {
+            selector.hide();
+        }
+    })
+
     arrivedDate.on("change", function () {
         const cate = incomeCategory.val();
         if (cate === "Standing Order") {
