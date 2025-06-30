@@ -2,10 +2,10 @@
 This script defines all operations.
 """
 import collections
-from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
-from database.models import Income, Rent, Room, Tenant
+from database.models import Income, IncomeEnum, Rent, Room, Tenant
+from utils.utilities import start_end_week
 
 
 def get_task(todo):
@@ -106,3 +106,84 @@ def calculate_subtotal_incomes(incomes):
             cate.append(income)
     od = collections.OrderedDict(sorted(result.items()))
     return od
+
+
+def calculate_total_groups(groups):
+    """Function: calculate total groups"""
+    result = {}
+    for k, v in groups.items():
+        total = 0
+        for income in v:
+            total += income["amount"]
+        result[k] = "{:,.2f}".format(total)
+    return result
+
+
+def calculate_total_rents(rents):
+    """Function: render the reports page for the incomes"""
+    result = {
+        "rent_due": 0,
+        "services": 0,
+        "utilities": 0,
+        "meals": 0,
+        "extra": 0,
+        "total": 0
+    }
+    for rent in rents:
+        result["rent_due"] += rent["rent_due"]
+        result["services"] += rent["services"]
+        result["utilities"] += rent["utilities"]
+        result["meals"] += rent["meals"]
+        result["extra"] += rent["extra"]
+        result["total"] += rent["rent_due"]+rent["services"]
+        result["total"] += rent["utilities"]+rent["meals"]+rent["extra"]
+
+    return result
+
+
+def filter_incomes_by_dates(incomes, from_date, to_date):
+    """Function: filter incomes by dates"""
+    begin_date_of_from, end_date_of_from = start_end_week(from_date)
+    begin_date_of_to, end_date_of_to = start_end_week(to_date)
+    start = begin_date_of_from
+    weeks_included = []
+    while start <= end_date_of_to:
+        weeks_included.append(start)
+        start += timedelta(days=7)
+    # print(weeks_included)
+    filtered_incomes = []
+    for income in incomes:
+        ic_from_date = income["from_date"].date()
+        ic_to_date = income["to_date"].date()
+        if ic_from_date >= begin_date_of_from and ic_to_date <= end_date_of_to:
+            filtered_incomes.append(income)
+        elif (ic_from_date.month != ic_to_date.month
+              and income["category"] == IncomeEnum.HOUSING_BENEFIT.value
+              and ((begin_date_of_from <= ic_to_date <= end_date_of_to)
+                   or (begin_date_of_from <= ic_from_date <= end_date_of_to))):
+            start = ic_from_date
+            weeks = []
+            while start <= ic_to_date:
+                weeks.append(start)
+                start += timedelta(days=7)
+            # print(weeks)
+            t = 0
+            for week in weeks:
+                if week in weeks_included:
+                    t += 1
+            # print(t)
+            amount = income["amount"]/len(weeks)*t
+            income["amount"] = amount
+            filtered_incomes.append(income)
+    return filtered_incomes
+
+
+def filter_rents_by_dates(rents, from_date, to_date):
+    """ Filter the rents by tenants. """
+    begin_date_of_from, end_date_of_from = start_end_week(from_date)
+    begin_date_of_to, end_date_of_to = start_end_week(to_date)
+    filtered_rents = []
+    for rent in rents:
+        if begin_date_of_from <= rent["week_commence"].date() <= end_date_of_to:
+            filtered_rents.append(rent)
+    return filtered_rents
