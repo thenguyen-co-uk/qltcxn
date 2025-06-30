@@ -99,6 +99,14 @@
             toastr.warning("Please choose a valid tenant!!!");
             return false;
         }
+        if (fromDateSelector.val() === 0 || toDateSelector.val().length === 0) {
+            toastr.error("Make sure both dates are valid.");
+            return false;
+        }
+        if (Date.parse(fromDateSelector.val()) > Date.parse(toDateSelector.val())) {
+            toastr.warning("Make sure the To Date greater than the From Date.");
+            return false;
+        }
         const subTotal = chkSubtotalCategory.is(':checked');
         const URL = "/reports/rent-payment/search"
         const data = {
