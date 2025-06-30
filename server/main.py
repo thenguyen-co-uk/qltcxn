@@ -69,7 +69,14 @@ async def get_all_tenants():
 
 @router.delete("/income/delete/{_id}")
 async def delete_income(_id: str):
-    """Route: delete a income entry"""
+    """Route: delete an income entry
+    We don't have a request as an argument to this route.
+    It will cause the error: 'RecursionError: maximum recursion depth exceeded'
+    A suggestion was found here
+    https://stackoverflow.com/a/72781606/865603
+    or
+    https://stackoverflow.com/a/78856055/865603
+    """
     col_incomes.find_one_and_delete({"_id": ObjectId(_id)})
     return {
         "status_code": 200,
