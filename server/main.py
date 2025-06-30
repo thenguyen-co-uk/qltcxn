@@ -17,7 +17,8 @@ from database.schemas import calculate_subtotal_incomes, get_all_records, \
     get_income, get_rent, get_room, \
     get_task, \
     get_tenant
-from utils.utilities import income_categories, start_end_week, weeks_between
+from utils.utilities import income_categories, reconcile_income_dates, \
+    start_end_week, weeks_between
 
 app = FastAPI()
 router = APIRouter()
@@ -29,25 +30,6 @@ col_incomes = db["income"]
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
-
-
-def reconcile(income: Income):
-    """
-    Reconciles the dates of the income
-    """
-    t = income.arrived_date
-    income.arrived_date = datetime(t.year, t.month, t.day, 0, 0, 0)
-    if income.category in ['Housing Benefit', 'Standing Order']:
-        t = income.from_date
-        income.from_date = datetime(t.year, t.month, t.day, 0, 0, 0)
-    else:
-        income.from_date = None
-    if income.category in ['Housing Benefit', 'Standing Order']:
-        t = income.to_date
-        income.to_date = datetime(t.year, t.month, t.day, 0, 0, 0)
-    else:
-        income.to_date = None
-    return income
 
 
 @router.get("/categories", response_class=HTMLResponse)
@@ -277,7 +259,7 @@ async def reports_rent_payment_search(item: RentPaymentSearch, req: Request):
 @router.put("/income/update/{income_object_id}")
 async def update_income(income_object_id: str, income: Income):
     """Route: update a given income"""
-    income = reconcile(income)
+    income = reconcile_income_dates(income)
     result = col_incomes.update_one(
         {"_id": ObjectId(income_object_id)},
         {"$set": dict(income)}, upsert=False

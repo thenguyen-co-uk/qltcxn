@@ -3,7 +3,7 @@ Define the utilities and helpers
 """
 from datetime import date, datetime, timedelta
 from dateutil import rrule
-from database.models import IncomeEnum
+from database.models import Income, IncomeEnum
 
 
 def weeks_between(start_date, end_date):
@@ -38,3 +38,22 @@ def income_categories():
     for k, v in IncomeEnum.__members__.items():
         categories.append({"name": v.value, "id": k})
     return categories
+
+
+def reconcile_income_dates(income: Income):
+    """ Reconciles the these date fields of the income
+    The type of the dates sent from the client is datetime.date where the
+    type of the ones on the server side (e.g., pydantic) is datetime.datetime
+    """
+    t = income.arrived_date
+    income.arrived_date = datetime(t.year, t.month, t.day, 0, 0, 0)
+    if income.category in ['Housing Benefit', 'Standing Order']:
+        t = income.from_date
+        income.from_date = datetime(t.year, t.month, t.day, 0, 0, 0)
+        t = income.to_date
+        income.to_date = datetime(t.year, t.month, t.day, 0, 0, 0)
+    else:
+        income.from_date = None
+        income.to_date = None
+
+    return income
