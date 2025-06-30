@@ -1,5 +1,6 @@
 <script>
     const btnAction = $('#btn-action');
+    const btnDelete = $('#btn-delete');
     const incomeCategory = $('#category');
     const arrivedDate = $('#arrived_date');
     const fromDate = $('#from_date');
@@ -133,4 +134,36 @@
         val = val === "Update" ? "Save" : "Update";
         $(this).val(val);
     });
+
+    btnDelete.on("click", function () {
+        if (!confirm("Are you sure to delete this record?")) {
+            return false;
+        }
+        const _id = "{{ id }}";
+        const URL = "/income/delete/" + _id;
+        fetch(URL, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify({"_id": _id})
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response failed!!!');
+            }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            const msg = "The page will be redirected after 3 seconds...";
+            toastr.success(data["status_code"] + ": " + data["message"]);
+            toastr.warning(msg);
+            setTimeout(() => {
+                window.location = "/incomes/list/"
+            }, 3000);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+    });
+
 </script>

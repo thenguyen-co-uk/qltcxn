@@ -25,6 +25,12 @@
             </div>
         </div>
     </div>
-    <label for="btn-action"></label>
-    <input type="button" id="btn-action" class="button" value="Update">
+    <div class="button-group">
+        <label for="btn-action"></label>
+        <input type="button" id="btn-action" class="button" value="Update">
+        {% if action == "read" %}
+        <label for="btn-delete"></label>
+        <input type="button" id="btn-delete" class="button" value="Delete">
+        {% endif %}
+    </div>
 </form>

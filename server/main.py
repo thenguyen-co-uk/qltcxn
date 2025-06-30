@@ -67,6 +67,17 @@ async def get_all_tenants():
     return get_all_records(get_tenant, data)
 
 
+@router.delete("/income/delete/{_id}")
+async def delete_income(_id: str):
+    """Route: delete a income entry"""
+    col_incomes.find_one_and_delete({"_id": ObjectId(_id)})
+    return {
+        "status_code": 200,
+        "_id": _id,
+        "message": f"income {_id} deleted"
+    }
+
+
 @router.delete("/tenant/delete/{_id}")
 async def delete_tenant(req: Request, _id: str):
     """Route: delete a tenant"""
