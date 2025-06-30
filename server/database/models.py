@@ -78,7 +78,9 @@ class Income(BaseModel):
     """
     This class is used to hold all incomes
     """
-    for_tenant: str # Tenant ID
+    # we use this attribute to capture the tenants. It is also used to
+    # capture the person who will receive it or send/donate.
+    for_tenant: str # Tenant ID - it is also a beneficiary or sender/donor
     description: str
     amount: float
     # category: Standing Order, Refund, Housing Benefit
@@ -87,6 +89,7 @@ class Income(BaseModel):
     # statement
     arrived_date: date
     # if the category is Housing Benefit, from_date and to_date are required
+    # otherwise, two attributes are None
     from_date: Optional[date] = None
     to_date: Optional[date] = None
 

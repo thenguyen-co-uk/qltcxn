@@ -80,10 +80,13 @@ def get_income(income: Income):
         "description": income["description"],
         "amount": income["amount"],
         "category": income["category"],
-        "arrived_date": income["arrived_date"].date(),
-        "from_date": income["from_date"].date(),
-        "to_date": income["to_date"].date()
+        "arrived_date": income["arrived_date"].date()
     }
+    if income["from_date"] is not None:
+        data["from_date"] = income["from_date"].date()
+    if income["to_date"] is not None:
+        data["to_date"] = income["to_date"].date()
+
     return data
 
 

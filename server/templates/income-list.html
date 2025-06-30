@@ -19,7 +19,7 @@
                 <thead>
                 <tr>
                     <th>Object ID</th>
-                    <th>For Tenant</th>
+                    <th>Tenant/Correspondant</th>
                     <th>Description</th>
                     <th>Amount</th>
                     <th>Category</th>
@@ -37,8 +37,16 @@
                         <td>{{ income.amount }}</td>
                         <td>{{ income.category }}</td>
                         <td>{{ income.arrived_date.strftime("%d/%m/%Y") }}</td>
+                        {% if income.from_date %}
                         <td>{{ income.from_date.strftime("%d/%m/%Y") }}</td>
+                        {% else %}
+                        <td>&nbsp;</td>
+                        {% endif %}
+                        {% if income.from_date %}
                         <td>{{ income.to_date.strftime("%d/%m/%Y") }}</td>
+                        {% else %}
+                        <td>&nbsp;</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
 

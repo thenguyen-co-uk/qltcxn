@@ -37,10 +37,16 @@ def reconcile(income: Income):
     """
     t = income.arrived_date
     income.arrived_date = datetime(t.year, t.month, t.day, 0, 0, 0)
-    t = income.from_date
-    income.from_date = datetime(t.year, t.month, t.day, 0, 0, 0)
-    t = income.to_date
-    income.to_date = datetime(t.year, t.month, t.day, 0, 0, 0)
+    if income.category in ['Housing Benefit', 'Standing Order']:
+        t = income.from_date
+        income.from_date = datetime(t.year, t.month, t.day, 0, 0, 0)
+    else:
+        income.from_date = None
+    if income.category in ['Housing Benefit', 'Standing Order']:
+        t = income.to_date
+        income.to_date = datetime(t.year, t.month, t.day, 0, 0, 0)
+    else:
+        income.to_date = None
     return income
 
 
@@ -94,7 +100,7 @@ async def read_income(req: Request, id: str):
     income = col_incomes.find_one({"_id": ObjectId(id)})
     income = get_income(income)
     _categories = income_categories()
-    r = [item for item in _categories if item["id"] == income["category"]]
+    r = [item for item in _categories if item["name"] == income["category"]]
     ctx = {
         "request": req,
         "id": id,
@@ -395,8 +401,12 @@ async def add_income(new_income: Income):
         d = dict(new_income)
         df = '%Y-%m-%d'
         d["arrived_date"] = datetime.strptime(str(d["arrived_date"]), df)
-        d["from_date"] = datetime.strptime(str(d["from_date"]), df)
-        d["to_date"] = datetime.strptime(str(d["to_date"]), df)
+        if d["category"] not in ['Housing Benefit', 'Standing Order']:
+            d["from_date"] = None
+            d["to_date"] = None
+        else:
+            d["from_date"] = datetime.strptime(str(d["from_date"]), df)
+            d["to_date"] = datetime.strptime(str(d["to_date"]), df)
         resp = col_incomes.insert_one(d)
         return {"status_code": 200, "id": str(resp.inserted_id)}
     except Exception as e:
@@ -448,7 +458,7 @@ async def render_add_income(req: Request):
     """Route: render the form to add an income"""
     dt_now = datetime.now()
     d_now = dt_now.date()
-    income = Income(description="", amount=0, for_tenant="TENANT_ID",
+    income = Income(description="", amount=0, for_tenant="",
                     category=IncomeEnum.STANDING_ORDER, arrived_date=d_now,
                     from_date=d_now, to_date=d_now)
     _categories = income_categories()

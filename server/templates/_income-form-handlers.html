@@ -27,15 +27,21 @@
     }
 
     function extractData() {
-        return {
+        let data = {
             'for_tenant': $('#tenant').val(),
             'description': $('#description').val(),
             'amount': parseFloat($('#amount').val()),
             'category': incomeCategory.val(),
             'arrived_date': arrivedDate.val(),
-            'from_date': fromDate.val(),
-            'to_date': toDate.val()
         };
+        if (['Housing Benefit', 'Standing Order'].includes(incomeCategory.val())) {
+            data['from_date'] = fromDate.val();
+            data['to_date'] = toDate.val();
+        } else {
+            data['from_date'] = null;
+            data['to_date'] = null;
+        }
+        return data;
     }
 
     function saveChanges() {

@@ -4,10 +4,12 @@
     <div class="income-property">
         <div class="income-property-updatable">
             <label for="description">Description</label>
-            <textarea id="description" readonly>{{ income["description"] }}</textarea>
+            <textarea id="description" placeholder="Explain when this income is a refund or donation"
+                      readonly>{{ income["description"] }}</textarea>
 
-            <label for="tenant">Tenant</label>
-            <input type="text" id="tenant" value="{{ income['for_tenant'] }}" readonly>
+            <label for="tenant">Tenant/Receiver/Donor</label>
+            <input type="text" id="tenant" value="{{ income['for_tenant'] }}"
+                   placeholder="tenant, sender, receiver, or donor" readonly>
 
             <label for="amount">Amount</label>
             <input type="number" id="amount" value="{{ income['amount'] }}" readonly>
